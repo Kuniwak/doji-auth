@@ -8,15 +8,16 @@
  */
 
 goog.provide('sia.ui.NumericalKey');
+goog.provide('sia.ui.NumericalKey.EventType');
 goog.provide('sia.ui.NumericalKeyRenderer');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.functions');
-goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Button');
 goog.require('goog.ui.ButtonRenderer');
+goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.registry');
 
 
@@ -41,7 +42,7 @@ sia.ui.NumericalKey = function(number, combiNum, opt_renderer, opt_domHelper) {
 
 	this.number_ = number;
 	this.keyCode_ = number + goog.events.KeyCodes.ZERO;
-	this.combinationalNumbers_ = combiNum;
+	this.combinationalSymbols_ = combiNum;
 };
 goog.inherits(sia.ui.NumericalKey, goog.ui.Button);
 
@@ -62,19 +63,23 @@ sia.ui.NumericalKey.EventType = {
  * @type {string}
  */
 sia.ui.NumericalKey.CSS_CLASS = goog.getCssName('sia-button');
+goog.ui.registry.setDecoratorByClassName(sia.ui.NumericalKey.CSS_CLASS,
+		sia.ui.NumericalKey);
+
+
+/**
+ * Whether the key is pressed.
+ * @private
+ * @type {boolean}
+ */
+sia.ui.NumericalKey.prototype.isKeyPressed_ = false;
 
 
 /** @override */
 sia.ui.NumericalKey.prototype.enterDocument = function() {
 	goog.base(this, 'enterDocument');
 
-	var target = this.getKeyEventTarget();
 	var handler = this.getHandler();
-
-	handler.listen(
-			/* src  */ this,
-			/* type */ goog.ui.Component.EventType.ACTION,
-			/* func */ this.handleAction);
 
 	handler.listen(
 			/* src  */ this,
@@ -86,16 +91,30 @@ sia.ui.NumericalKey.prototype.enterDocument = function() {
 			/* type */ sia.ui.NumericalKey.EventType.POSTACTION,
 			/* func */ this.handlePostaction);
 
+	//TODO: Adapt IE and Older Webkit
 	handler.listen(
-			/* src  */ target,
+			/* src  */ this.getDomHelper().getDocument(),
 			/* type */ goog.events.EventType.KEYDOWN,
 			/* func */ this.handleKeydown);
 
+	//TODO: Adapt IE and Older Webkit
 	handler.listen(
-			/* src  */ target,
+			/* src  */ this.getDomHelper().getDocument(),
 			/* type */ goog.events.EventType.KEYUP,
 			/* func */ this.handleKeyup);
 };
+
+
+/** @override */
+sia.ui.NumericalKey.prototype.handleMouseDown = goog.nullFunction;
+
+
+/** @override */
+sia.ui.NumericalKey.prototype.handleMouseUp = goog.nullFunction;
+
+
+/** @override */
+sia.ui.NumericalKey.prototype.handleMouseMove = goog.nullFunction;
 
 
 /**
@@ -103,14 +122,14 @@ sia.ui.NumericalKey.prototype.enterDocument = function() {
  * @param {?goog.events.Event} e Keyup event to handle.
  */
 sia.ui.NumericalKey.prototype.handleKeydown = function(e) {
-	console.log(e);
-	if (this.isEnabled()) {
-		if (this.isAutoState(goog.ui.Component.State.ACTIVE)) {
-			var preactionEvent = new goog.events.Event(
-					sia.ui.NumericalKey.EventType.PREACTION, this);
-			this.setActive(true);
-			this.dispatchEvent(preactionEvent);
-		}
+	if (this.isEnabled() &&
+			this.isAutoState(goog.ui.Component.State.ACTIVE) &&
+			!this.isKeyPressed_ && this.keyCode_ === e.keyCode) {
+		var preactionEvent = new goog.events.Event(
+				sia.ui.NumericalKey.EventType.PREACTION, this);
+		this.setActive(true);
+		this.isKeyPressed_ = true;
+		this.dispatchEvent(preactionEvent);
 	}
 };
 
@@ -120,16 +139,16 @@ sia.ui.NumericalKey.prototype.handleKeydown = function(e) {
  * @param {?goog.events.Event} e Keyup event to handle.
  */
 sia.ui.NumericalKey.prototype.handleKeyup = function(e) {
-	console.log(e);
-	if (this.isEnabled()) {
-		if (this.isActive() && this.performActionInternal(e) &&
-				this.isAutoState(goog.ui.Component.State.ACTIVE)) {
-			var postactionEvent = new goog.events.Event(
-					sia.ui.NumericalKey.EventType.POSTACTION, this);
-			this.setActive(false);
-			this.dispatchEvent(preactionEvent);
-		}
+	if (this.isEnabled() && this.isActive() &&
+			this.performActionInternal(e) &&
+			this.isAutoState(goog.ui.Component.State.ACTIVE) &&
+			this.keyCode_ === e.keyCode) {
+		var postactionEvent = new goog.events.Event(
+				sia.ui.NumericalKey.EventType.POSTACTION, this);
+		this.setActive(false);
+		this.dispatchEvent(postactionEvent);
 	}
+	this.isKeyPressed_ = false;
 };
 
 
@@ -138,34 +157,22 @@ sia.ui.NumericalKey.prototype.handleKeyEventInternal = goog.functions.FALSE;
 
 
 /**
- * Handles an action event.
- * @param {?goog.events.Event} e Activate event to handle.
- */
-sia.ui.NumericalKey.prototype.handleAction = function(e) {
-	var event = new goog.events.Event(sia.ui.NumericalKey.EventType.POSTACTION,
-			this);
-
-	this.dispatchEvent(event);
-};
-
-
-/**
  * Handles a preaction event.
- * @param {?goog.events.Event} e Activate event to handle.
+ * @param {?goog.events.Event} e Preaction event to handle.
  */
 sia.ui.NumericalKey.prototype.handlePreaction = function(e) {
-	console.log(e);
-	this.combinationalNumbers_.append(this.number_);
+	console.log(e.type + ':' + this.number_);
+	this.combinationalSymbols_.append(this.number_);
 };
 
 
 /**
  * Handles a postaction event.
- * @param {?goog.events.Event} e Deactivate event to handle.
+ * @param {?goog.events.Event} e Postaction event to handle.
  */
 sia.ui.NumericalKey.prototype.handlePostaction = function(e) {
-	console.log(e);
-	this.combinationalNumbers_.remove(this.number_);
+	console.log(e.type + ':' + this.number_);
+	//this.combinationalSymbols_.remove(this.number_);
 };
 
 
