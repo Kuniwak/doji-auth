@@ -161,7 +161,6 @@ sia.ui.NumericalKey.prototype.handleKeyEventInternal = goog.functions.FALSE;
  * @param {?goog.events.Event} e Preaction event to handle.
  */
 sia.ui.NumericalKey.prototype.handlePreaction = function(e) {
-	console.log(e.type + ':' + this.number_);
 	this.combinationalSymbols_.append(this.number_);
 };
 
@@ -171,7 +170,6 @@ sia.ui.NumericalKey.prototype.handlePreaction = function(e) {
  * @param {?goog.events.Event} e Postaction event to handle.
  */
 sia.ui.NumericalKey.prototype.handlePostaction = function(e) {
-	console.log(e.type + ':' + this.number_);
 	//this.combinationalSymbols_.remove(this.number_);
 };
 
