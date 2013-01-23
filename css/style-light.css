@@ -18,12 +18,12 @@ div#init-disp {
 	width: 100%;
 	height: 100%;
 	text-align: center;
-	background: url(Images/Background-stripe.png);
+	background: url(../img/Background-stripe.png);
 	z-index: 150;
 }
 
 div#init-disp div.admin {
-	background: hsla(0, 0%, 0%, 0.3) url(Images/I_heart_validator.png) no-repeat 97% 97%;
+	background: hsla(0, 0%, 0%, 0.3) url(../img/I_heart_validator.png) no-repeat 97% 97%;
 	margin: 0 10px;
 	padding: 0.5em;
 	border-radius: 10px;

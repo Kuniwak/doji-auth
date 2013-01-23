@@ -18,12 +18,12 @@ div#init-disp {
 	width: 100%;
 	height: 100%;
 	text-align: center;
-	background: url(Images/Background-stripe.png);
+	background: url(../img/Background-stripe.png);
 	z-index: 150;
 }
 
 div#init-disp div.admin {
-	background: hsla(0, 0%, 0%, 0.3) url(Images/I_heart_validator.png) no-repeat 97% 97%;
+	background: hsla(0, 0%, 0%, 0.3) url(../img/I_heart_validator.png) no-repeat 97% 97%;
 	margin: 0 10px;
 	padding: 0.5em;
 	border-radius: 10px;
@@ -51,7 +51,7 @@ textarea#init-import-input {
 	height: 3em;
 }
 
-div#buttons {
+div#sia-buttons {
 	display: -webkit-box;
 	position: absolute;
 	-webkit-box-orient: vertical;
@@ -68,7 +68,7 @@ div.indicator-background {
 	background: hsl(0, 0%, 0%);
 }
 
-div.indicator, div.indicator-active {
+div.indicator {
 	height: 100%;
 	-webkit-box-flex: 1.0;
 	margin: 0 0.5px;
@@ -90,16 +90,21 @@ div.indicator-active {
 	);
 }
 
-div.button-row {
+div.sia-button-row {
 	display: -webkit-box;
 	-webkit-box-flex: 1.0;
 }
 
-div.row-2x {
+div.sia-button-row > div:first-child {
+	border-left: none;
+}
+
+div.sia-button-row-2x {
 	-webkit-box-flex: 3.0;
 }
 
-div.button, div.func-button {
+div.sia-button, div.sia-func-button {
+	cursor: pointer;
 	display: -webkit-box;
 	-webkit-box-flex: 1.0;
 	-webkit-box-align: center;
@@ -107,18 +112,7 @@ div.button, div.func-button {
 	font-family: 'Helvetica';
 }
 
-div.button-char {
-	font-size: 200%;
-	width: 70px;
-	max-width: 100%;
-	text-align: center;
-}
-
-div#button-Show div.button-char {
-	font-size: 140%;
-}
-
-div.button-inactive, div.func-button-active {
+div.sia-button {
 	border-top: 1px solid hsla(222, 0%, 100%, 0.5);
 	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
 	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
@@ -127,7 +121,7 @@ div.button-inactive, div.func-button-active {
 	text-shadow: 0 -1px 0 hsla(222, 8.6%, 0%, 0.5);
 }
 
-div.func-button-inactive, div.button-active {
+div.sia-func-button {
 	border-top: 1px solid hsla(222, 8.6%, 100%, 0.5);
 	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
 	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
@@ -136,14 +130,36 @@ div.func-button-inactive, div.button-active {
 	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.5);
 }
 
-div.button-row > div:first-child {
-	border-left: none;
+div.sia-button-active {
+	border-top: 1px solid hsla(222, 8.6%, 100%, 0.5);
+	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
+	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
+	background: -webkit-gradient(linear, center top, center bottom, from(hsl(219, 6.7%, 88.2%)), to(hsl(222, 7.8%, 72.9%)));
+	color: hsl(222, 8.6%, 22.4%);
+	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.5);
 }
 
-div#button-NONE {
+div.sia-func-button-active {
+	border-top: 1px solid hsla(222, 0%, 100%, 0.5);
+	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
+	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
+	background: -webkit-gradient(linear, center top, center bottom, from(hsl(219, 8.2%, 47.5%)), to(hsl(222, 12.1%, 34.5%)));
+	color: hsl(222, 8.6%, 100%);
+	text-shadow: 0 -1px 0 hsla(222, 8.6%, 0%, 0.5);
+}
+
+div#sia-button-NONE {
+	cursor: default;
 	color: hsla(222, 8.6%, 22.4%, 0.2);
 	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.1);
 	font-size: 65%;
+}
+
+div.sia-button-char {
+	font-size: 200%;
+	width: 70px;
+	max-width: 100%;
+	text-align: center;
 }
 
 div.w3c {
