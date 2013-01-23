@@ -29,12 +29,31 @@ sia.secrets.VirtualSymbol = {
 /**
  * Resolves virtual symbols from a set of symbols.
  * The result is map of symbols and each count.
+ *
+ * There are resolve rule: a,b,c are any numbers, and a < b < c.
+ * <ul>
+ * <li>a + (L|M|S) = aa</li>
+ * <li>a + L + M = aaa</li>
+ * <li>a + M + S = aaa</li>
+ * <li>a + L + S = aaa</li>
+ * <li>a + b + L = abb</li>
+ * <li>a + b + M = aab</li>
+ * <li>a + b + S = aab</li>
+ * <li>a + L + M + S = aaaa</li>
+ * <li>a + b + M + S = aaab</li>
+ * <li>a + b + L + S = aabb</li>
+ * <li>a + b + L + M = abbb</li>
+ * <li>a + b + c + L = abcc</li>
+ * <li>a + b + c + M = abbc</li>
+ * <li>a + b + c + S = aabc</li>
+ * </ul>
+ *
  * @private
  * @param {goog.structs.Set.<string>} set The set of symbols.
  * @return {goog.structs.Map.<string, number>} Pairs of symbols and each counts.
  */
 sia.secrets.resolveSet = function(set) {
-	var hasLarge = false, hasMedium = false, hasSmall = false;
+	var hasLarger = false, hasMedium = false, hasSmaller = false;
 	var Symbol = sia.secrets.VirtualSymbol;
 	var sorted = [];
 	var map = new goog.structs.Map();
@@ -42,13 +61,13 @@ sia.secrets.resolveSet = function(set) {
 	goog.structs.forEach(set, function(symbol) {
 		switch (symbol) {
 			case Symbol.LARGE:
-				hasLarge = true;
+				hasLarger = true;
 				break;
 			case Symbol.MEDIUM:
 				hasMedium = true;
 				break;
-			case Symbol.LARGE:
-				hasSmall = true;
+			case Symbol.SMALL:
+				hasSmaller = true;
 				break;
 			default:
 				goog.array.binaryInsert(sorted, symbol);
@@ -57,17 +76,32 @@ sia.secrets.resolveSet = function(set) {
 		}
 	});
 
-	if (hasLarge) {
-		var larger = goog.array.peek(sorted);
+	var larget, medium, smaller;
+	if (hasLarger) {
+		larger = goog.array.peek(sorted);
+		goog.asserts.assertString(larger);
 		map.set(larger, map.get(larger) + 1);
 	}
-	if (hasMedium) {
-		var medium = sorted[sorted.length > 2 ? 1 : 0];
-		map.set(medium, map.get(medium) + 1);
+	if (hasSmaller) {
+		smaller = sorted[0];
+		goog.asserts.assertString(smaller);
+		map.set(smaller, map.get(smaller) + 1);
 	}
-	if (hasSmall) {
-		var small = sorted[0];
-		map.set(small, map.get(small) + 1);
+	if (hasMedium) {
+		var len = sorted.length;
+		switch (len) {
+			case 3:
+				medium = sorted[1];
+				break;
+			case 2:
+				medium = sorted[hasLarger ? 1 : 0];
+				break;
+			default:
+				medium = sorted[0];
+				break;
+		}
+		goog.asserts.assertString(medium);
+		map.set(medium, map.get(medium) + 1);
 	}
 
 	return map;
