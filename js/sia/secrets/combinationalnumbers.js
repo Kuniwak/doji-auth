@@ -115,7 +115,12 @@ sia.secrets.CombinationalSymbols.prototype.append = function(symbol) {
  * @param {boolean} Whether the symbol was removed.
  */
 sia.secrets.CombinationalSymbols.prototype.remove = function(symbol) {
-	return this.getCurrentSet().remove(symbol);
+	var set = this.getCurrentSet();
+	
+	if (set) {
+		return set.remove(symbol);
+	}
+	return false;
 };
 
 
