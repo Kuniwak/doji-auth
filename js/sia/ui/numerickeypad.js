@@ -19,8 +19,8 @@ goog.require('goog.ui.ContainerRenderer');
 goog.require('goog.ui.registry');
 goog.require('sia.secrets.CombinationalSymbols');
 goog.require('sia.ui.FunctionKey');
+goog.require('sia.ui.SymbolKey.EventType');
 goog.require('sia.ui.NumericalKey');
-goog.require('sia.ui.NumericalKey.EventType');
 goog.require('sia.ui.NumericalKeyRenderer');
 
 
@@ -70,6 +70,20 @@ goog.ui.registry.setDecoratorByClassName(sia.ui.NumericalKeypad.CSS_CLASS,
 sia.ui.NumericalKeypad.prototype.aciteveCount_ = 0;
 
 
+/** @override */
+sia.ui.NumericalKeypad.prototype.addChildAt = function(control, index,
+		opt_render) {
+	goog.base(this, 'addChildAt', control, index, opt_render);
+	if (control.setCombinationalSymbols) {
+		control.setCombinationalSymbols(this.getCombonationalSymbols());
+	}
+};
+
+
+/**
+ * Returns a combinational symbols.
+ * @param {sia.secrets.CombinationalSymbols} The combinational symbols.
+ */
 sia.ui.NumericalKeypad.prototype.getCombonationalSymbols = function() {
 	return this.combinationalSymbols_;
 };
@@ -83,12 +97,12 @@ sia.ui.NumericalKeypad.prototype.enterDocument = function() {
 
 	handler.listen(
 			/* src  */ this,
-			/* type */ sia.ui.NumericalKey.EventType.PREACTION,
+			/* type */ sia.ui.SymbolKey.EventType.PREACTION,
 			/* func */ this.handlePreaction);
 
 	handler.listen(
 			/* src  */ this,
-			/* type */ sia.ui.NumericalKey.EventType.POSTACTION,
+			/* type */ sia.ui.SymbolKey.EventType.POSTACTION,
 			/* func */ this.handlePostaction);
 };
 
@@ -139,50 +153,22 @@ sia.ui.NumericalKeypadRenderer.prototype.decorateChildren = function(container,
 		element, opt_firstChild) {
 	var rows = goog.dom.getElementsByClass(
 			sia.ui.NumericalKeypadRenderer.ROW_CSS_CLASS, element);
-	goog.structs.forEach(rows, function(element) {
-		// The code is copy of goog.ui.ContainerRenderer.prototype.decorateChildren.
-		if (element) {
-			var node = opt_firstChild || element.firstChild, next;
-			// Tag soup HTML may result in a DOM where siblings have different parents.
-			while (node && node.parentNode == element) {
-				// Get the next sibling here, since the node may be replaced or removed.
-				next = node.nextSibling;
-				if (node.nodeType == goog.dom.NodeType.ELEMENT) {
-					// Decorate element node.
-					var child = this.getDecoratorForChild(/** @type {Element} */(node),
-						container); // (OrgaChem) Add second arguments.
-					if (child) {
-						// addChild() may need to look at the element.
-						child.setElementInternal(/** @type {Element} */(node));
-						// If the container is disabled, mark the child disabled too.  See
-						// bug 1263729.  Note that this must precede the call to addChild().
-						if (!container.isEnabled()) {
-							child.setEnabled(false);
-						}
-						container.addChild(child);
-						child.decorate(/** @type {Element} */(node));
-					}
-				} else if (!node.nodeValue || goog.string.trim(node.nodeValue) == '') {
-					// Remove empty text node, otherwise madness ensues (e.g. controls that
-					// use goog-inline-block will flicker and shift on hover on Gecko).
-					element.removeChild(node);
-				}
-				node = next;
-			}
-		}
+	goog.structs.forEach(rows, function(row) {
+		sia.ui.NumericalKeypadRenderer.superClass_.decorateChildren.call(this,
+			container, row, opt_firstChild);
 	}, this);
 };
 
 
 /** @override */
 sia.ui.NumericalKeypadRenderer.prototype.getDecoratorForChild = function(
-		element, container) {
+		element) {
 	if (goog.dom.classes.has(element, sia.ui.NumericalKey.CSS_CLASS)) {
 		var number = parseInt(goog.dom.dataset.get(element, 'number'));
-		return new sia.ui.NumericalKey(number, container.getCombonationalSymbols());
+		return new sia.ui.NumericalKey(number);
 	}
 	else if (goog.dom.classes.has(element, sia.ui.FunctionKey.CSS_CLASS)) {
-		return new sia.ui.FunctionKey(container.getCombonationalSymbols());
+		return new sia.ui.FunctionKey();
 	}
 	else {
 		return goog.ui.registry.getDecorator(element);
