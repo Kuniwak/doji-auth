@@ -45,7 +45,7 @@ goog.inherits(sia.ui.NumericalKey, sia.ui.SymbolKey);
  * @const
  * @type {string}
  */
-sia.ui.NumericalKey.CSS_CLASS = goog.getCssName('sia-symbol-key');
+sia.ui.NumericalKey.CSS_CLASS = goog.getCssName('sia-numerical-key');
 goog.ui.registry.setDecoratorByClassName(sia.ui.NumericalKey.CSS_CLASS,
 		sia.ui.NumericalKey);
 
