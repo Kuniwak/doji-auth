@@ -103,7 +103,7 @@ div.sia-keys-row-2x {
 	-webkit-box-flex: 3.0;
 }
 
-div.sia-symbol-key, div.sia-virtual-symbol-key {
+div.sia-numerical-key, div.sia-virtual-symbol-key, div.sia-backspace-key, div.sia-null-key {
 	display: -webkit-box;
 	-webkit-box-flex: 1.0;
 	-webkit-box-align: center;
@@ -111,7 +111,7 @@ div.sia-symbol-key, div.sia-virtual-symbol-key {
 	font-family: 'Helvetica';
 }
 
-div.sia-symbol-key, div.sia-virtual-symbol-key-active {
+div.sia-numerical-key {
 	border-top: 1px solid hsla(222, 0%, 100%, 0.5);
 	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
 	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
@@ -120,7 +120,7 @@ div.sia-symbol-key, div.sia-virtual-symbol-key-active {
 	text-shadow: 0 -1px 0 hsla(222, 8.6%, 0%, 0.5);
 }
 
-div.sia-virtual-symbol-key, div.sia-symbol-key-active {
+div.sia-numerical-key-active {
 	border-top: 1px solid hsla(222, 8.6%, 100%, 0.5);
 	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
 	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
@@ -129,14 +129,33 @@ div.sia-virtual-symbol-key, div.sia-symbol-key-active {
 	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.5);
 }
 
-div#sia-symbol-key-NONE {
-	cursor: default;
-	color: hsla(222, 8.6%, 22.4%, 0.2);
-	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.1);
-	font-size: 65%;
+div.sia-virtual-symbol-key, div.sia-backspace-key, div.sia-null-key {
+	border-top: 1px solid hsla(222, 8.6%, 100%, 0.5);
+	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
+	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
+	background: -webkit-gradient(linear, center top, center bottom, from(hsl(219, 6.7%, 88.2%)), to(hsl(222, 7.8%, 72.9%)));
+	color: hsl(222, 8.6%, 22.4%);
+	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.5);
 }
 
-div.sia-symbol-key-char {
+div.sia-virtual-symbol-key-active, div.sia-backspace-key-active {
+	border-top: 1px solid hsla(222, 0%, 100%, 0.5);
+	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
+	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
+	background: -webkit-gradient(linear, center top, center bottom, from(hsl(219, 8.2%, 47.5%)), to(hsl(222, 12.1%, 34.5%)));
+	color: hsl(222, 8.6%, 100%);
+	text-shadow: 0 -1px 0 hsla(222, 8.6%, 0%, 0.5);
+}
+
+div.sia-numerical-key-disabled {
+	color: hsl(222, 8.6%, 60%);
+}
+
+div.sia-numerical-key-disabled, div.sia-virtual-symbol-key-disabled, div.sia-backspace-key-disabled {
+	color: hsl(222, 8.6%, 70%);
+}
+
+div.sia-symbol{
 	font-size: 200%;
 	width: 70px;
 	max-width: 100%;
