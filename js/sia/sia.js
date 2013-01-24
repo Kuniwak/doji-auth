@@ -11,9 +11,9 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.object');
 goog.require('goog.ui.Component');
-goog.require('sia.ui.NumericalKeypad');
+goog.require('sia.ui.Keypad');
 
 var NUMERICAL_KEYPAD_ID = 'sia-keys';
-var numKeys = new sia.ui.NumericalKeypad();
+var numKeys = new sia.ui.Keypad();
 numKeys.decorate(goog.dom.getElement(NUMERICAL_KEYPAD_ID));
 window.NUM_KEYS = numKeys;
