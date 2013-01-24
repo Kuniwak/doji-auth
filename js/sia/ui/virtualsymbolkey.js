@@ -9,8 +9,8 @@
 
 goog.provide('sia.ui.VirtualSymbolKey');
 goog.provide('sia.ui.VirtualSymbolKeyRenderer');
-goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.ui.registry');
 goog.require('sia.secrets.VirtualSymbol');
 goog.require('sia.ui.SymbolKey');
@@ -63,6 +63,7 @@ sia.ui.VirtualSymbolKey.CSS_CLASS = goog.getCssName('sia-virtual-symbol-key');
 sia.ui.VirtualSymbolKey.prototype.getKeyCode = function() {
 	return this.keyCode_;
 };
+
 
 
 /**
