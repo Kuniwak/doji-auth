@@ -51,7 +51,7 @@ textarea#init-import-input {
 	height: 3em;
 }
 
-div#buttons {
+div#sia-keys {
 	display: -webkit-box;
 	position: absolute;
 	-webkit-box-orient: vertical;
@@ -80,16 +80,16 @@ div.indicator-active {
 	background: hsl(0, 0%, 100%);
 }
 
-div.button-row {
+div.sia-keys-row {
 	display: -webkit-box;
 	-webkit-box-flex: 1.0;
 }
 
-div.row-2x {
+div.sia-keys-row-2x {
 	-webkit-box-flex: 3.0;
 }
 
-div.button, div.func-button {
+div.sia-symbol-key, div.sia-virtual-symbol-key {
 	display: -webkit-box;
 	-webkit-box-flex: 1.0;
 	-webkit-box-align: center;
@@ -97,18 +97,7 @@ div.button, div.func-button {
 	font-family: 'Helvetica';
 }
 
-div.button-char {
-	font-size: 200%;
-	width: 70px;
-	max-width: 100%;
-	text-align: center;
-}
-
-div#button-Show div.button-char {
-	font-size: 140%;
-}
-
-div.button-inactive, div.func-button-active {
+div.sia-symbol-key, div.sia-virtual-symbol-key-active {
 	border-top: 1px solid hsla(222, 0%, 100%, 0.5);
 	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
 	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
@@ -116,7 +105,7 @@ div.button-inactive, div.func-button-active {
 	color: hsl(222, 8.6%, 100%);
 }
 
-div.func-button-inactive, div.button-active {
+div.sia-virtual-symbol-key, div.sia-symbol-key-active {
 	border-top: 1px solid hsla(222, 8.6%, 100%, 0.5);
 	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
 	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
@@ -124,11 +113,18 @@ div.func-button-inactive, div.button-active {
 	color: hsl(222, 8.6%, 22.4%);
 }
 
-div.button-row > div:first-child {
+div.sia-symbol-key-char {
+	font-size: 200%;
+	width: 70px;
+	max-width: 100%;
+	text-align: center;
+}
+
+div.sia-keys-row > div:first-child {
 	border-left: none;
 }
 
-div#button-NONE {
+div#sia-symbol-key-NONE {
 	color: hsla(222, 8.6%, 22.4%, 0.2);
 	font-size: 60%;
 }
