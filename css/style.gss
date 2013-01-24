@@ -1,0 +1,172 @@
+/* Yuki Kokubun (2011 UEC Tokyo Japan, Takada.Lab) <uec.takada.lab@hotmail.com> */
+@defmixin gradient(POS, COLORS) {
+	background-image: linear-gradient(POS, COLORS);
+	/* @alternate */ background-image: -webkit-linear-gradient(POS, COLORS); /* Chrome 10+,Safari 5.1+ */
+	/* @alternate */ background-image: -moz-linear-gradient(POS, COLORS);    /* FF3.6+ */
+	/* @alternate */ background-image: -ms-linear-gradient(POS, COLORS);     /* IE10 */
+	/* @alternate */ background-image: -o-linear-gradient(POS, COLORS);      /* Opera 11.10+ */
+}
+
+@def KEY_COLORS_DARK hsl(219, 8.2%, 47.5%), hsl(222, 12.1%, 34.5%);
+@def KEY_COLORS_BRIGHT hsl(219, 6.7%, 88.2%), hsl(222, 7.8%, 72.9%);
+
+@defmixin key() {
+	display: -webkit-box;
+	-webkit-box-flex: 1.0;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
+	font-family: 'Helvetica';
+}
+
+@defmixin key-dark() {
+	border-top: 1px solid hsla(222, 0%, 100%, 0.5);
+	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
+	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
+	text-shadow: 0 -1px 0 hsla(222, 8.6%, 0%, 0.5);
+	color: hsl(222, 8.6%, 100%);
+	@mixin key();
+	@mixin gradient(top, KEY_COLORS_DARK);
+}
+
+@defmixin key-bright() {
+	border-top: 1px solid hsla(222, 8.6%, 100%, 0.5);
+	border-bottom: 1px solid hsla(222, 0%, 0%, 0.5);
+	border-left: 1px solid hsla(222, 0%, 0%, 0.5);
+	text-shadow: 0 1px 0 hsla(222, 8.6%, 100%, 0.5);
+	color: hsl(222, 8.6%, 22.4%);
+	@mixin key();
+	@mixin gradient(top, KEY_COLORS_BRIGHT);
+}
+
+@def P_BAR_COLORS_A hsl(0, 0%, 50%), hsl(0, 0%, 30%), hsl(0, 0%, 20%), hsl(0, 0%, 30%);
+@def P_BAR_COLORS_B hsl(0, 0%, 100%), hsl(0, 0%, 60%), hsl(0, 0%, 50%), hsl(0, 0%, 60%);
+
+* {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	font-family: 'LucidaGrande', sans-serif;
+}
+
+div#init-disp {
+	display: fixed;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: url(../img/Background-stripe.png);
+	z-index: 150;
+}
+
+div#init-disp div.admin {
+	background: hsla(0, 0%, 0%, 0.3) url(../img/I_heart_validator.png) no-repeat 97% 97%;
+	margin: 0 10px;
+	padding: 0.5em;
+	border-radius: 10px;
+}
+
+div#init-disp button {
+	opacity: 0.2;
+	margin: 1em auto;
+}
+
+div#init-disp button#init-auth {
+	opacity: 1;
+	margin: 1.7em auto;
+}
+
+div#init-disp span {
+	color: hsl(222, 8.6%, 100%);
+	text-shadow: 0 -1px 0 hsla(222, 8.6%, 0%, 0.5);
+	line-height: 2.5em;
+}
+
+textarea#init-import-input {
+	opacity: 0.2;
+	-webkit-user-select: auto;
+	height: 3em;
+}
+
+div.sia-keys {
+	display: -webkit-box;
+	position: absolute;
+	-webkit-box-orient: vertical;
+	width: 100%;
+	height: 100%;
+}
+
+div.progress-bar-horizontal {
+	display: -webkit-box;
+	overflow: hidden;
+	height: 8px;
+	padding: 1px;
+	-webkit-background-clip: border;
+	background: hsl(0, 0%, 20%);
+	@mixin gradient(top, P_BAR_COLORS_A);
+}
+
+div.progress-bar-thumb {
+	height: 100%;
+	margin: 0 0.5px;
+	overflow: hidden;
+	@mixin gradient(top, P_BAR_COLORS_B);
+}
+
+div.sia-keys-row {
+	display: -webkit-box;
+	-webkit-box-flex: 1.0;
+}
+
+div.sia-keys-row > div:first-child {
+	border-left: none;
+}
+
+div.sia-keys-row-2x {
+	-webkit-box-flex: 3.0;
+}
+
+div.sia-numerical-key {
+	@mixin key-dark();
+}
+
+div.sia-numerical-key-active {
+	@mixin key-bright();
+}
+
+div.sia-virtual-symbol-key, div.sia-backspace-key, div.sia-null-key {
+	@mixin key-bright();
+}
+
+div.sia-virtual-symbol-key-active, div.sia-backspace-key-active {
+	@mixin key-dark();
+}
+
+div.sia-numerical-key-disabled {
+	color: hsl(222, 8.6%, 60%);
+}
+
+div.sia-numerical-key-disabled, div.sia-virtual-symbol-key-disabled, div.sia-backspace-key-disabled {
+	color: hsl(222, 8.6%, 70%);
+}
+
+div.sia-symbol{
+	font-size: 200%;
+	width: 70px;
+	max-width: 100%;
+	text-align: center;
+}
+
+div.w3c {
+	font-family: 'Georgia-Bold';
+	width: 40px;
+}
+
+div.html5 {
+	width: 30px;
+}
