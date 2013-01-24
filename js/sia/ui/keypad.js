@@ -9,6 +9,8 @@
 
 goog.provide('sia.ui.Keypad');
 goog.provide('sia.ui.KeypadRenderer');
+
+goog.require('goog.Timer');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.dataset');
@@ -18,9 +20,9 @@ goog.require('goog.ui.Container');
 goog.require('goog.ui.ContainerRenderer');
 goog.require('goog.ui.registry');
 goog.require('sia.secrets.CombinationalSymbols');
+goog.require('sia.ui.BackspaceKey');
+goog.require('sia.ui.Key.EventType');
 goog.require('sia.ui.NumericalKey');
-goog.require('sia.ui.NumericalKeyRenderer');
-goog.require('sia.ui.SymbolKey.EventType');
 goog.require('sia.ui.VirtualSymbolKey');
 
 
@@ -31,10 +33,10 @@ goog.require('sia.ui.VirtualSymbolKey');
  * @constructor
  * @extends {goog.ui.Container}
  * @param {goog.ui.KeypadRenderer=} opt_renderer Renderer used to
- *     render or decorate the container; defaults to
- *     {@link goog.ui.ContainerRenderer}.
+ *		 render or decorate the container; defaults to
+ *		 {@link goog.ui.ContainerRenderer}.
  * @param {goog.dom.DomHelper=} opt_domHelper DOM helper, used for document
- *     interaction.
+ *		 interaction.
  */
 sia.ui.Keypad = function(opt_renderer, opt_domHelper) {
 	goog.base(this, null, opt_renderer || new sia.ui.KeypadRenderer(),
@@ -43,6 +45,22 @@ sia.ui.Keypad = function(opt_renderer, opt_domHelper) {
 	this.combinationalSymbols_ = new sia.secrets.CombinationalSymbols();
 };
 goog.inherits(sia.ui.Keypad, goog.ui.Container);
+
+
+/**
+ * Common events fired by numeric key.
+ * @enum {string}
+ */
+sia.ui.Keypad.EventType = {
+	UPDATE: 'update',
+	COMPLETE: 'complete'
+};
+
+
+/**
+ * @define {number} Interval to determine mis-input.
+ */
+sia.ui.Keypad.UPDATE_INTERVAL = 1000;
 
 
 /**
@@ -57,9 +75,9 @@ goog.ui.registry.setDecoratorByClassName(sia.ui.Keypad.CSS_CLASS,
 
 // Register a decorator factory function for goog.ui.Buttons.
 goog.ui.registry.setDecoratorByClassName(sia.ui.Keypad.CSS_CLASS,
-    function() {
-      return new sia.ui.Keypad();
-    });
+		function() {
+			return new sia.ui.Keypad();
+		});
 
 
 /**
@@ -70,21 +88,19 @@ goog.ui.registry.setDecoratorByClassName(sia.ui.Keypad.CSS_CLASS,
 sia.ui.Keypad.prototype.activeCount_ = 0;
 
 
-/** @override */
-sia.ui.Keypad.prototype.addChildAt = function(control, index,
-		opt_render) {
-	goog.base(this, 'addChildAt', control, index, opt_render);
-	if (control.setCombinationalSymbols) {
-		control.setCombinationalSymbols(this.getCombonationalSymbols());
-	}
-};
+/**
+ * A timer ID to detect a mis-input.
+ * @private
+ * @type {?number}
+ */
+sia.ui.Keypad.prototype.timerId_ = null;
 
 
 /**
  * Returns a combinational symbols.
  * @return {sia.secrets.CombinationalSymbols} The combinational symbols.
  */
-sia.ui.Keypad.prototype.getCombonationalSymbols = function() {
+sia.ui.Keypad.prototype.getCombinationalSymbols = function() {
 	return this.combinationalSymbols_;
 };
 
@@ -96,14 +112,45 @@ sia.ui.Keypad.prototype.enterDocument = function() {
 	var handler = this.getHandler();
 
 	handler.listen(
-			/* src  */ this,
-			/* type */ sia.ui.SymbolKey.EventType.PREACTION,
+			/* src	*/ this,
+			/* type */ sia.ui.Key.EventType.PREACTION,
 			/* func */ this.handlePreaction);
 
 	handler.listen(
-			/* src  */ this,
-			/* type */ sia.ui.SymbolKey.EventType.POSTACTION,
+			/* src	*/ this,
+			/* type */ sia.ui.Key.EventType.POSTACTION,
 			/* func */ this.handlePostaction);
+
+	this.initialize();
+};
+
+
+/** @override */
+sia.ui.Keypad.prototype.addChildAt = function(control, index, opt_render) {
+	goog.base(this, 'addChildAt', control, index, opt_render);
+	if (control instanceof sia.ui.BackspaceKey) {
+		this.setBackspaceKey(control);
+	}
+};
+
+
+/**
+ * Sets a backspace key component.
+ *
+ * @param {sua.ui.BackspaceKey} key The backspace key.
+ */
+sia.ui.Keypad.prototype.setBackspaceKey = function(key) {
+	this.bsKey_ = key;
+};
+
+
+/**
+ * Returns a backspace key component if it was defined.
+ *
+ * @return {sua.ui.BackspaceKey=} The backspace key.
+ */
+sia.ui.Keypad.prototype.getBackspaceKey = function() {
+	return this.bsKey_;
 };
 
 
@@ -112,10 +159,10 @@ sia.ui.Keypad.prototype.enterDocument = function() {
  * adds the child to a new array.
  *
  * @param {function(this:T,?,number):?} f The function to call for every child
- *   component; should take 2 arguments (the child and its index).
+ *	 component; should take 2 arguments (the child and its index).
  * @param {T=} opt_obj Used as the 'this' object in f when called.
  * @return {Array.<goog.ui.Control>} Children in which only controls that
- *   passed the test are present.
+ *	 passed the test are present.
  */
 sia.ui.Keypad.prototype.filterChildren = function(f, opt_obj) {
 	var children = [];
@@ -132,43 +179,174 @@ sia.ui.Keypad.prototype.filterChildren = function(f, opt_obj) {
 
 
 /**
- * Disable inactive children.
+ * Enables or disables a backspace key.
+ * @param {boolean} enable Whether to enable or disable the component.
  */
-sia.ui.Keypad.prototype.disableInactiveChildren = function() {
+sia.ui.Keypad.prototype.setBackspaceKeyEnabled = function(enable) {
+	var bs = this.getBackspaceKey();
+	if (bs) {
+		bs.setEnabled(enable);
+	}
+};
+
+
+/**
+ * Enables or disables symbol keys.
+ * @param {boolean} enable Whether to enable or disable the component.
+ */
+sia.ui.Keypad.prototype.setInactiveSymbolKeysEnabled = function(enable) {
 	this.forEachChild(function(child) {
-		if (!child.isActive()) {
-			child.setEnabled(false);
+		if (child !== this.getBackspaceKey() && !child.isActive()) {
+			child.setEnabled(enable);
 		}
-	});
+	}, this);
+};
+
+
+/**
+ * Returns a count of active keys.
+ * @return {number} The count of active keys.
+ */
+sia.ui.Keypad.prototype.getActiveKeyCount = function() {
+	return this.activeCount_;
+};
+
+
+/**
+ * Returns a count of active keys.
+ * @return {number} The count of active keys.
+ */
+sia.ui.Keypad.prototype.clearActiveKeyCount = function() {
+	this.activeCount_ = 0;
+};
+
+
+/**
+ * Increments active keys count.
+ * @param {number=} opt_count Count of active keys to increment.
+ */
+sia.ui.Keypad.prototype.incrementAvtiveKeyCount = function(opt_count) {
+	this.activeCount_ += goog.isDef(opt_count) ? opt_count : 1;
+};
+
+
+/**
+ * Increments active keys count.
+ * @param {number=} opt_count Count of active keys to increment.
+ */
+sia.ui.Keypad.prototype.decrementAvtiveKeyCount = function(opt_count) {
+	this.activeCount_ -= goog.isDef(opt_count) ? opt_count : 1;
+	if (this.activeCount_ < 0) {
+		this.activeCount_ = 0;
+	}
 };
 
 
 /**
  * Handles a preaction event.
+ * @protected
  * @param {?goog.events.Event} e Preaction event to handle.
  */
 sia.ui.Keypad.prototype.handlePreaction = function(e) {
-	++this.activeCount_;
-	if (this.getCombonationalSymbols().getCount() >=
-			sia.secrets.CombinationalSymbols.MAX_COUNT) {
-		this.disableInactiveChildren();
+	if (e.target !== this.getBackspaceKey()) {
+		this.clearTimeout();
+		if (this.getCombinationalSymbols().getCount() >=
+				sia.secrets.CombinationalSymbols.MAX_COUNT) {
+			this.setInactiveSymbolKeysEnabled(false);
+		}
+		this.dispatchEvent(sia.ui.Keypad.EventType.UPDATE);
 	}
 };
 
 
 /**
  * Handles a postaction event.
+ * @protected
  * @param {?goog.events.Event} e Postaction event to handle.
  */
 sia.ui.Keypad.prototype.handlePostaction = function(e) {
-	if (--this.activeCount_) {
-		this.combinationalSymbols_.push();
+	if (e.target !== this.getBackspaceKey()) {
+		this.clearTimeout();
+		if (this.getActiveKeyCount() <= 0) {
+			this.getCombinationalSymbols().push();
+			this.setBackspaceKeyEnabled(true);
+			if (this.getCombinationalSymbols().getCount() >=
+					sia.secrets.CombinationalSymbols.MAX_COUNT) {
+				this.setEnabled(false);
+				this.dispatchEvent(sia.ui.Keypad.EventType.COMPLETE);
+			}
+		}
+		else {
+			this.setTimeout();
+		}
 	}
+	else {
+		if (this.getCombinationalSymbols().getCount() <= 0) {
+			this.setBackspaceKeyEnabled(false);
+		}
+		this.dispatchEvent(sia.ui.Keypad.EventType.UPDATE);
+	}
+};
 
-	if (this.getCombonationalSymbols().getCount() >=
-			sia.secrets.CombinationalSymbols.MAX_COUNT) {
-		this.disableInactiveChildren();
+
+/**
+ * Sets a timeout event.
+ */
+sia.ui.Keypad.prototype.setTimeout = function() {
+	this.timerId_ = goog.Timer.callOnce(this.handleTimeout,
+			sia.ui.Keypad.UPDATE_INTERVAL, this);
+};
+
+
+/**
+ * Clears a timeout event.
+ */
+sia.ui.Keypad.prototype.clearTimeout = function() {
+	if (goog.isDefAndNotNull(this.timerId_)) {
+		goog.Timer.clear(this.timerId_);
+		this.timerId_ = null;
 	}
+};
+
+
+/**
+ * Handles timeout event.
+ * @protected
+ */
+sia.ui.Keypad.prototype.handleTimeout = function() {
+	this.updateActiveKeys();
+};
+
+
+/**
+ * Updates input by keys are active.
+ */
+sia.ui.Keypad.prototype.updateActiveKeys = function() {
+	var symbols = this.getCombinationalSymbols();
+	symbols.pop();
+	this.activeCount_ = 0;
+	this.forEachChild(function(key) {
+		if (key.isActive()) {
+			symbols.append(key.getSymbol());
+			this.activeCount_++;
+		}
+	}, this);
+	this.setInactiveSymbolKeysEnabled(true);
+	this.dispatchEvent(sia.ui.Keypad.EventType.UPDATE);
+};
+
+
+/**
+ * Initializes keypad states.
+ */
+sia.ui.Keypad.prototype.initialize = function() {
+	this.clearTimeout();
+	this.getCombinationalSymbols().clear();
+	this.clearActiveKeyCount();
+	this.setEnabled(true);
+	this.setInactiveSymbolKeysEnabled(true);
+	this.setBackspaceKeyEnabled(false);
+	this.dispatchEvent(sia.ui.Keypad.EventType.UPDATE);
 };
 
 
@@ -209,7 +387,7 @@ sia.ui.KeypadRenderer.prototype.decorateChildren = function(container,
 /** @override */
 sia.ui.KeypadRenderer.prototype.getDecoratorForChild = function(
 		element) {
-			var symbol;
+	var symbol;
 	if (goog.dom.classes.has(element, sia.ui.NumericalKey.CSS_CLASS)) {
 		symbol = goog.dom.dataset.get(element, 'symbol');
 		return new sia.ui.NumericalKey(symbol);
@@ -217,6 +395,9 @@ sia.ui.KeypadRenderer.prototype.getDecoratorForChild = function(
 	else if (goog.dom.classes.has(element, sia.ui.VirtualSymbolKey.CSS_CLASS)) {
 		symbol = goog.dom.dataset.get(element, 'symbol');
 		return new sia.ui.VirtualSymbolKey(symbol);
+	}
+	else if (goog.dom.classes.has(element, sia.ui.BackspaceKey.CSS_CLASS)) {
+		return new sia.ui.BackspaceKey();
 	}
 	else {
 		return goog.ui.registry.getDecorator(element);
