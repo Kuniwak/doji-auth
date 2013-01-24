@@ -9,9 +9,9 @@
 
 goog.provide('sia.ui.NumericalKey');
 goog.provide('sia.ui.NumericalKeyRenderer');
-goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.string');
+goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.ui.registry');
 goog.require('sia.ui.SymbolKey');
 
@@ -24,18 +24,15 @@ goog.require('sia.ui.SymbolKey');
  * @extends {sia.ui.SymbolKey}
  *
  * @param {string} number The number string of the key.
- * @param {sia.secrets.CombinationalSymbols} opt_symbols The comnational
- *   symbols.
  * @param {sia.ui.NumericalKeyRenderer=} opt_renderer Renderer used to
  *   render or decorate the numerical key; defaults to
  *   {@link sia.ui.NumericalKeyRenderer}.
  * @param {goog.dom.DomHelper=} opt_domHelper DOM helper, used for document
  *   interaction.
  */
-sia.ui.NumericalKey = function(number, opt_symbols, opt_renderer,
-		opt_domHelper) {
-	goog.base(this, number, opt_symbols, opt_renderer ||
-			new sia.ui.NumericalKeyRenderer(), opt_domHelper);
+sia.ui.NumericalKey = function(number, opt_renderer, opt_domHelper) {
+	goog.base(this, number, opt_renderer || new sia.ui.NumericalKeyRenderer(),
+			opt_domHelper);
 
 	this.keyCode_ = goog.string.parseInt(this.getSymbol()) +
 		goog.events.KeyCodes.ZERO;
@@ -48,15 +45,12 @@ goog.inherits(sia.ui.NumericalKey, sia.ui.SymbolKey);
  * @const
  * @type {string}
  */
-sia.ui.NumericalKey.CSS_CLASS = goog.getCssName('sia-button');
+sia.ui.NumericalKey.CSS_CLASS = goog.getCssName('sia-symbol-key');
 goog.ui.registry.setDecoratorByClassName(sia.ui.NumericalKey.CSS_CLASS,
 		sia.ui.NumericalKey);
 
 
-/**
- * Returns a key code of the key.
- * @return {?number} The key code.
- */
+/** @override */
 sia.ui.NumericalKey.prototype.getKeyCode = function() {
 	return this.keyCode_;
 };

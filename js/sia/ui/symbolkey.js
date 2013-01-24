@@ -29,21 +29,15 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.Button}
  *
  * @param {string} symbol The symbol of the key.
- * @param {?sia.secrets.CombinationalSymbols=} opt_symbols The comnational
- *   symbols.
  * @param {goog.ui.ButtonRenderer=} opt_renderer Renderer used to render or
  *   decorate the numerical key; defaults to {@link sia.ui.ButtonRenderer}.
  * @param {goog.dom.DomHelper=} opt_domHelper DOM helper, used for document
  *   interaction.
  */
-sia.ui.SymbolKey = function(symbol, opt_symbols, opt_renderer, opt_domHelper) {
+sia.ui.SymbolKey = function(symbol, opt_renderer, opt_domHelper) {
 	goog.base(this, null, opt_renderer, opt_domHelper);
 
 	this.symbol_ = symbol;
-
-	if (opt_symbols) {
-		this.setCombinationalSymbols(opt_symbols);
-	}
 };
 goog.inherits(sia.ui.SymbolKey, goog.ui.Button);
 
@@ -86,7 +80,7 @@ sia.ui.SymbolKey.prototype.setCombinationalSymbols = function(symbols) {
 
 /**
  * Returns a combinational symbols.
- * @param {sia.secrets.CombinationalSymbols} The combinational symbols.
+ * @return {sia.secrets.CombinationalSymbols} The combinational symbols.
  */
 sia.ui.SymbolKey.prototype.getCombinationalSymbols = function() {
 	return this.combinationalSymbols_;

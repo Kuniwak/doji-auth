@@ -18,10 +18,10 @@ goog.require('goog.ui.Container');
 goog.require('goog.ui.ContainerRenderer');
 goog.require('goog.ui.registry');
 goog.require('sia.secrets.CombinationalSymbols');
-goog.require('sia.ui.FunctionKey');
-goog.require('sia.ui.SymbolKey.EventType');
+goog.require('sia.ui.VirtualSymbolKey');
 goog.require('sia.ui.NumericalKey');
 goog.require('sia.ui.NumericalKeyRenderer');
+goog.require('sia.ui.SymbolKey.EventType');
 
 
 
@@ -82,7 +82,7 @@ sia.ui.NumericalKeypad.prototype.addChildAt = function(control, index,
 
 /**
  * Returns a combinational symbols.
- * @param {sia.secrets.CombinationalSymbols} The combinational symbols.
+ * @return {sia.secrets.CombinationalSymbols} The combinational symbols.
  */
 sia.ui.NumericalKeypad.prototype.getCombonationalSymbols = function() {
 	return this.combinationalSymbols_;
@@ -139,13 +139,16 @@ sia.ui.NumericalKeypadRenderer = function() {
 goog.inherits(sia.ui.NumericalKeypadRenderer, goog.ui.ContainerRenderer);
 
 
+sia.ui.NumericalKeypadRenderer
+
+
 /**
  * Css class name for rows of buttons.
  * @const
  * @type {string}
  */
 sia.ui.NumericalKeypadRenderer.ROW_CSS_CLASS = goog.getCssName(
-		'sia-button-row');
+		'sia-keys-row');
 
 
 /** @override */
@@ -163,12 +166,14 @@ sia.ui.NumericalKeypadRenderer.prototype.decorateChildren = function(container,
 /** @override */
 sia.ui.NumericalKeypadRenderer.prototype.getDecoratorForChild = function(
 		element) {
+			var symbol;
 	if (goog.dom.classes.has(element, sia.ui.NumericalKey.CSS_CLASS)) {
-		var number = parseInt(goog.dom.dataset.get(element, 'number'));
-		return new sia.ui.NumericalKey(number);
+		symbol = goog.dom.dataset.get(element, 'symbol');
+		return new sia.ui.NumericalKey(symbol);
 	}
-	else if (goog.dom.classes.has(element, sia.ui.FunctionKey.CSS_CLASS)) {
-		return new sia.ui.FunctionKey();
+	else if (goog.dom.classes.has(element, sia.ui.VirtualSymbolKey.CSS_CLASS)) {
+		symbol = goog.dom.dataset.get(element, 'symbol');
+		return new sia.ui.VirtualSymbolKey(symbol);
 	}
 	else {
 		return goog.ui.registry.getDecorator(element);
