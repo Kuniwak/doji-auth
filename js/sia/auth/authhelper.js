@@ -19,8 +19,6 @@ goog.require('goog.asserts');
  *   method.
  */
 sia.auth.AuthenticationHelper = function(opt_correct) {
-	this.acceptEncryption = !!opt_acceptEncyption;
-
 	if (opt_correct) {
 		this.setCorrect(opt_correct);
 	}
