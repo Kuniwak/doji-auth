@@ -31,6 +31,15 @@ sia.secrets.CombinationalSymbols = function(opt_sets) {
 
 
 /**
+ * Clears a combinational symbols.
+ */
+sia.secrets.CombinationalSymbols.prototype.clear = function() {
+	this.sets_ = [];
+	this.isInputing_ = false;
+};
+
+
+/**
  * Returns a current set.
  *
  * @return {goog.structs.Set} set Current set.
