@@ -50,7 +50,7 @@ sia.ui.SymbolKey.prototype.handlePreaction = function(e) {
 		parent.setBackspaceKeyEnabled(false);
 		var symbols = this.getCombinationalSymbols();
 		symbols.append(this.getSymbol());
-		parent.incrementAvtiveKeyCount();
+		parent.incrementActiveSymbolKeyCount();
 	}
 };
 
@@ -60,6 +60,6 @@ sia.ui.SymbolKey.prototype.handlePostaction = function() {
 	var parent = this.getParent();
 
 	if (parent) {
-		parent.decrementAvtiveKeyCount();
+		parent.decrementActiveSymbolKeyCount();
 	}
 };
