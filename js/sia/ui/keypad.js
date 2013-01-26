@@ -109,18 +109,6 @@ sia.ui.Keypad.prototype.getCombinationalSymbols = function() {
 sia.ui.Keypad.prototype.enterDocument = function() {
 	goog.base(this, 'enterDocument');
 
-	var handler = this.getHandler();
-
-	handler.listen(
-			/* src	*/ this,
-			/* type */ sia.ui.Key.EventType.PREACTION,
-			/* func */ this.handlePreaction);
-
-	handler.listen(
-			/* src	*/ this,
-			/* type */ sia.ui.Key.EventType.POSTACTION,
-			/* func */ this.handlePostaction);
-
 	this.initialize();
 };
 
@@ -254,53 +242,6 @@ sia.ui.Keypad.prototype.decrementActiveSymbolKeyCount = function(opt_count) {
 	this.activeCount_ -= goog.isDef(opt_count) ? opt_count : 1;
 	if (this.activeCount_ < 0) {
 		this.activeCount_ = 0;
-	}
-};
-
-
-/**
- * Handles a preaction event.
- * @protected
- * @param {?goog.events.Event} e Preaction event to handle.
- */
-sia.ui.Keypad.prototype.handlePreaction = function(e) {
-	if (e.target !== this.getBackspaceKey()) {
-		this.clearTimeout();
-		if (this.getCombinationalSymbols().getCount() >=
-				sia.secrets.CombinationalSymbols.MAX_COUNT) {
-			this.setInactiveSymbolKeysEnabled(false);
-		}
-		this.update();
-	}
-};
-
-
-/**
- * Handles a postaction event.
- * @protected
- * @param {?goog.events.Event} e Postaction event to handle.
- */
-sia.ui.Keypad.prototype.handlePostaction = function(e) {
-	if (e.target !== this.getBackspaceKey()) {
-		this.clearTimeout();
-		if (this.getActiveSymbolKeyCount() <= 0) {
-			this.getCombinationalSymbols().push();
-			this.setBackspaceKeyEnabled(true);
-			if (this.getCombinationalSymbols().getCount() >=
-					sia.secrets.CombinationalSymbols.MAX_COUNT) {
-				this.setEnabled(false);
-				this.complete();
-			}
-		}
-		else {
-			this.setTimeout();
-		}
-	}
-	else {
-		if (this.getCombinationalSymbols().getCount() <= 0) {
-			this.setBackspaceKeyEnabled(false);
-		}
-		this.update();
 	}
 };
 

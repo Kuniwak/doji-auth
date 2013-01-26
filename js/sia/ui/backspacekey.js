@@ -65,9 +65,12 @@ sia.ui.BackspaceKey.prototype.handlePreaction = function(e) {
 sia.ui.BackspaceKey.prototype.handlePostaction = function(e) {
 	var parent = this.getParent();
 	if (parent) {
-		var symbols = this.getCombinationalSymbols();
-		symbols.pop();
+		if (parent.getCombinationalSymbols().getCount() <= 0) {
+			parent.setBackspaceKeyEnabled(false);
+		}
+		parent.getCombinationalSymbols().pop();
 		parent.setInactiveSymbolKeysEnabled(true);
+		parent.update();
 	}
 };
 

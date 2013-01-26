@@ -47,10 +47,16 @@ sia.ui.SymbolKey.prototype.handlePreaction = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
+		parent.clearTimeout();
 		parent.setBackspaceKeyEnabled(false);
-		var symbols = this.getCombinationalSymbols();
-		symbols.append(this.getSymbol());
+		parent.getCombinationalSymbols().append(this.getSymbol());
 		parent.incrementActiveSymbolKeyCount();
+
+		if (parent.getCombinationalSymbols().getCount() >=
+				sia.secrets.CombinationalSymbols.MAX_COUNT) {
+			parent.setInactiveSymbolKeysEnabled(false);
+		}
+		parent.update();
 	}
 };
 
@@ -60,6 +66,20 @@ sia.ui.SymbolKey.prototype.handlePostaction = function() {
 	var parent = this.getParent();
 
 	if (parent) {
+		parent.clearTimeout();
 		parent.decrementActiveSymbolKeyCount();
+
+		if (parent.getActiveSymbolKeyCount() <= 0) {
+			parent.getCombinationalSymbols().push();
+			parent.setBackspaceKeyEnabled(true);
+			if (parent.getCombinationalSymbols().getCount() >=
+					sia.secrets.CombinationalSymbols.MAX_COUNT) {
+				parent.setEnabled(false);
+				parent.complete();
+			}
+		}
+		else {
+			parent.setTimeout();
+		}
 	}
 };
