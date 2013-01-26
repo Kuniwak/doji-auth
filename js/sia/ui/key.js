@@ -8,7 +8,6 @@
  */
 
 goog.provide('sia.ui.Key');
-goog.provide('sia.ui.Key.EventType');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventType');
@@ -18,6 +17,8 @@ goog.require('goog.ui.Button');
 goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.registry');
+goog.require('sia.events.KeyEdgeTriggerHandler');
+goog.require('sia.events.KeyEdgeTriggerHandler.EventType');
 
 
 
@@ -34,40 +35,24 @@ goog.require('goog.ui.registry');
  */
 sia.ui.Key = function(opt_renderer, opt_domHelper) {
 	goog.base(this, null, opt_renderer, opt_domHelper);
+	this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
+
+	this.keyEdgeTriggerHandler_ = new sia.events.KeyEdgeTriggerHandler();
 };
 goog.inherits(sia.ui.Key, goog.ui.Button);
 
 
-/**
- * Common events fired by numeric key.
- * @enum {string}
- */
-sia.ui.Key.EventType = {
-	POSTACTION: 'postaction',
-	PREACTION: 'preaction'
-};
-
-
-/**
- * Whether the key is pressed.
- * @private
- * @type {boolean}
- */
-sia.ui.Key.prototype.isKeyPressed_ = false;
-
-
-/**
- * Returns a symbol of the key.
- * @return {?string} The symbol.
- */
-sia.ui.Key.prototype.getSymbol = function() {
-	return this.symbol_;
+/** @override */
+sia.ui.Key.prototype.disposeInternal = function() {
+	goog.base(this, 'disposeInternal');
+	this.keyEdgeTriggerHandler_.dispose();
 };
 
 
 /**
  * Returns a combinational symbols.
  * @return {sia.secrets.CombinationalSymbols} The combinational symbols.
+ * @deprecated Use getParent().getCombinationalSymbols().
  */
 sia.ui.Key.prototype.getCombinationalSymbols = function() {
 	var parent = this.getParent();
@@ -88,82 +73,42 @@ sia.ui.Key.prototype.getKeyCode = function() {
 sia.ui.Key.prototype.enterDocument = function() {
 	goog.base(this, 'enterDocument');
 
-	var handler = this.getHandler();
+	var keyHandler = this.keyEdgeTriggerHandler_;
+	keyHandler.attach(this.getDomHelper().getDocument());
 
-	handler.listen(
-			/* src  */ this,
-			/* type */ sia.ui.Key.EventType.PREACTION,
-			/* func */ this.handlePreaction);
-
-	handler.listen(
-			/* src  */ this,
-			/* type */ sia.ui.Key.EventType.POSTACTION,
-			/* func */ this.handlePostaction);
-
-	//TODO: Adapt IE and Older Webkit.
-	handler.listen(
-			/* src  */ this.getDomHelper().getDocument(),
-			/* type */ goog.events.EventType.KEYDOWN,
-			/* func */ this.handleKeydown);
-
-	//TODO: Adapt IE and Older Webkit.
-	handler.listen(
-			/* src  */ this.getDomHelper().getDocument(),
-			/* type */ goog.events.EventType.KEYUP,
-			/* func */ this.handleKeyup);
-};
-
-
-/** @override */
-sia.ui.Key.prototype.handleMouseDown = goog.nullFunction;
-
-
-/** @override */
-sia.ui.Key.prototype.handleMouseUp = goog.nullFunction;
-
-
-/** @override */
-sia.ui.Key.prototype.handleMouseMove = goog.nullFunction;
-
-
-/**
- * Handles a keyup event.
- * @protected
- * @param {?goog.events.Event} e Keyup event to handle.
- */
-sia.ui.Key.prototype.handleKeydown = function(e) {
-	if (this.getKeyCode() === e.keyCode) {
-		if (!this.isKeyPressed_) {
-			if (this.isEnabled() &&
-					this.isAutoState(goog.ui.Component.State.ACTIVE)) {
-				this.setActive(true);
-				this.dispatchEvent(sia.ui.Key.EventType.PREACTION);
-			}
-			this.isKeyPressed_ = true;
-		}
-		e.preventDefault();
-	}
+	this.getHandler().
+		listen(this, goog.ui.Component.EventType.ACTIVATE,
+			this.handleActivate).
+		listen(this, goog.ui.Component.EventType.DEACTIVATE,
+			this.handleDeactivate).
+		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
+			this.handleKeyFallingEgde).
+		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
+			this.handleKeyRisingEgde);
 };
 
 
 /**
- * Handles a keyup event.
- * @protected
- * @param {?goog.events.Event} e Keyup event to handle.
+ * Handles key falling edge event. Set an active state, if the event target is
+ * the element.
  */
-sia.ui.Key.prototype.handleKeyup = function(e) {
-	if (this.getKeyCode() === e.keyCode) {
-		if (this.isKeyPressed_) {
-			if (this.isEnabled() && this.isActive() &&
-					this.performActionInternal(e) &&
-					this.isAutoState(goog.ui.Component.State.ACTIVE)) {
-				this.setActive(false);
-				this.dispatchEvent(sia.ui.Key.EventType.POSTACTION);
-			}
-			this.isKeyPressed_ = false;
-		}
-		e.preventDefault();
+sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
+	if (this.isEnabled() && e.keyCode === this.getKeyCode()) {
+		this.setActive(true);
 	}
+	e.getBrowserEvent().preventDefault();
+};
+
+
+/**
+ * Handles key rising edge event. Set an inactive state, if the event target is
+ * the element.
+ */
+sia.ui.Key.prototype.handleKeyRisingEgde = function(e) {
+	if (this.isEnabled() && e.keyCode === this.getKeyCode()) {
+		this.setActive(false);
+	}
+	e.getBrowserEvent().preventDefault();
 };
 
 
@@ -174,14 +119,14 @@ sia.ui.Key.prototype.handleKeyEventInternal = goog.functions.FALSE;
 /**
  * Handles a preaction event.
  * @protected
- * @param {?goog.events.Event} e Preaction event to handle.
+ * @param {?goog.events.Event} e Activate event to handle.
  */
-sia.ui.Key.prototype.handlePreaction = goog.nullFunction;
+sia.ui.Key.prototype.handleActivate = goog.nullFunction;
 
 
 /**
  * Handles a postaction event.
  * @protected
- * @param {?goog.events.Event} e Postaction event to handle.
+ * @param {?goog.events.Event} e Deactivate event to handle.
  */
-sia.ui.Key.prototype.handlePostaction = goog.nullFunction;
+sia.ui.Key.prototype.handleDeactivate = goog.nullFunction;

@@ -43,23 +43,45 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handlePreaction = function(e) {
+sia.ui.SymbolKey.prototype.handleActivate = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
-		parent.setBackspaceKeyEnabled(false);
-		var symbols = this.getCombinationalSymbols();
-		symbols.append(this.getSymbol());
-		parent.incrementAvtiveKeyCount();
+		parent.clearTimeout();
+		if (parent.getCombinationalSymbols().getCount() >=
+				sia.secrets.CombinationalSymbols.MAX_COUNT) {
+			parent.setInactiveSymbolKeysEnabled(false);
+		}
+
+		parent.getCombinationalSymbols().append(this.getSymbol());
+		// Increment active key count.
+		parent.incrementActiveSymbolKeyCount();
+
+		parent.update();
 	}
 };
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handlePostaction = function() {
+sia.ui.SymbolKey.prototype.handleDeactivate = function() {
 	var parent = this.getParent();
 
 	if (parent) {
-		parent.decrementAvtiveKeyCount();
+		parent.clearTimeout();
+		// Backspace key should be disable when symbols input phase.
+		parent.setBackspaceKeyEnabled(false);
+		parent.decrementActiveSymbolKeyCount();
+
+		if (parent.getActiveSymbolKeyCount() <= 0) {
+			parent.getCombinationalSymbols().push();
+			parent.setBackspaceKeyEnabled(true);
+			if (parent.getCombinationalSymbols().getCount() >=
+					sia.secrets.CombinationalSymbols.MAX_COUNT) {
+				parent.complete();
+			}
+		}
+		else {
+			parent.setTimeout();
+		}
 	}
 };
