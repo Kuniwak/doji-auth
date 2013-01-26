@@ -89,13 +89,9 @@ if (sia.LOG_ENABLED) {
 	sia.console_ = new goog.debug.Console();
 	sia.console_.setCapturing(true);
 
-	var last_ = null;
-	goog.events.listen(document, [goog.events.EventType.KEYDOWN,
-			goog.events.EventType.KEYUP], function(e) {
-		if (last_ !== e.keyCode) {
-			sia.logger_.finest(e.type + ':' + goog.events.KeyNames[e.keyCode]);
-			last_ = e.keyCode;
-		}
+	goog.events.listen(sia.numKeys_, [goog.ui.Component.EventType.ACTIVATE,
+			goog.ui.Component.EventType.DEACTIVATE], function(e) {
+		sia.logger_.finer(e.type, e);
 	});
 
 	sia.numKeys_.addEventListener(sia.ui.Keypad.EventType.UPDATE, function(e) {
