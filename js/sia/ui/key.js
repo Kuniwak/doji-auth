@@ -18,6 +18,8 @@ goog.require('goog.ui.Button');
 goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.registry');
+goog.require('sia.events.KeyEdgeTriggerHandler');
+goog.require('sia.events.KeyEdgeTriggerHandler.EventType');
 
 
 
@@ -34,6 +36,8 @@ goog.require('goog.ui.registry');
  */
 sia.ui.Key = function(opt_renderer, opt_domHelper) {
 	goog.base(this, null, opt_renderer, opt_domHelper);
+
+	this.keyEdgeTriggerHandler_ = new sia.events.KeyEdgeTriggerHandler();
 };
 goog.inherits(sia.ui.Key, goog.ui.Button);
 
@@ -66,16 +70,6 @@ sia.ui.Key.prototype.getSymbol = function() {
 
 
 /**
- * Returns a combinational symbols.
- * @return {sia.secrets.CombinationalSymbols} The combinational symbols.
- */
-sia.ui.Key.prototype.getCombinationalSymbols = function() {
-	var parent = this.getParent();
-	return parent && parent.getCombinationalSymbols();
-};
-
-
-/**
  * Returns a key code of the key.
  * @return {?number} The key code.
  */
@@ -88,29 +82,18 @@ sia.ui.Key.prototype.getKeyCode = function() {
 sia.ui.Key.prototype.enterDocument = function() {
 	goog.base(this, 'enterDocument');
 
+	// TODO: Switch to goog.ui.Component.EventType.ACTIVATE/DEACTIVATE.
 	var handler = this.getHandler();
+	var keyHandler = this.keyEdgeTriggerHandler_;
+	keyHandler.attach(this.getDomHelper().getDocument());
 
-	handler.listen(
-			/* src  */ this,
-			/* type */ sia.ui.Key.EventType.PREACTION,
-			/* func */ this.handlePreaction);
-
-	handler.listen(
-			/* src  */ this,
-			/* type */ sia.ui.Key.EventType.POSTACTION,
-			/* func */ this.handlePostaction);
-
-	//TODO: Adapt IE and Older Webkit.
-	handler.listen(
-			/* src  */ this.getDomHelper().getDocument(),
-			/* type */ goog.events.EventType.KEYDOWN,
-			/* func */ this.handleKeydown);
-
-	//TODO: Adapt IE and Older Webkit.
-	handler.listen(
-			/* src  */ this.getDomHelper().getDocument(),
-			/* type */ goog.events.EventType.KEYUP,
-			/* func */ this.handleKeyup);
+	this.getHandler().
+		listen(this, sia.ui.Key.EventType.PREACTION, this.handlePreaction).
+		listen(this, sia.ui.Key.EventType.POSTACTION, this.handlePostaction).
+		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
+				this.handleKeydown).
+		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
+				this.handleKeyup);
 };
 
 
