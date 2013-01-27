@@ -109,7 +109,6 @@ sia.ui.BackspaceKey.prototype.handleChangeSymbolsCount = function(e) {
 		//this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, false);
 		this.setEnabled(enable);
 		//this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
->>>>>>> keyevent-without-crossbrowser
 	}
 };
 

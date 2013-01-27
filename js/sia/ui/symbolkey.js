@@ -59,7 +59,6 @@ sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
 	var parent = this.getParent();
 	var enable = parent.getCombinationalSymbols().getCount() <
 			sia.secrets.CombinationalSymbols.MAX_COUNT;
-	console.log(this.getSymbol(), parent.getCombinationalSymbols().getCount());
 	this.setEnabled(enable);
 };
 
@@ -72,5 +71,23 @@ sia.ui.SymbolKey.prototype.handlePostactivate = function(e) {
 		var symbol = this.getSymbol();
 		parent.clearTimeout();
 		parent.appendSymbol(symbol);
+		parent.setSymbolKeyActive(symbol, true);
+	}
+};
+
+
+/** @override */
+sia.ui.SymbolKey.prototype.handlePostdeactivate = function(e) {
+	var parent = this.getParent();
+
+	if (parent) {
+		parent.setSymbolKeyActive(this.getSymbol(), false);
+		if (parent.getActiveSymbolKeyCount() <= 0) {
+			parent.clearTimeout();
+			parent.pushAppendedSymbols();
+		}
+		else {
+			parent.setTimeout();
+		}
 	}
 };

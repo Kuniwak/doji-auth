@@ -53,7 +53,6 @@ goog.inherits(sia.ui.Keypad, goog.ui.Container);
  * @enum {string}
  */
 sia.ui.Keypad.EventType = {
-	CHANGE_COUNT: 'changecount',
 	APPENDED: 'appended',
 	REMOVED: 'removed',
 	PUSHED: 'pushed',
@@ -91,6 +90,14 @@ goog.ui.registry.setDecoratorByClassName(sia.ui.Keypad.CSS_CLASS,
  * @type {?number}
  */
 sia.ui.Keypad.prototype.timerId_ = null;
+
+
+/**
+ * A map to store activities of each symbol keys.
+ * @private
+ * @type {goog.structs.Map<string, number>}
+ */
+sia.ui.Keypad.prototype.symbolKeyActivityMap_ = new goog.structs.Map();
 
 
 /**
@@ -167,13 +174,23 @@ sia.ui.Keypad.prototype.popAppendedSymbols = function() {
 
 
 /**
+ * Sets an activity to a symbol key.
+ * @param {string} symbol The symbol to sets activity.
+ * @param {boolean} enable Whether the symbol is active.
+ */
+sia.ui.Keypad.prototype.setSymbolKeyActive = function(symbol, enable) {
+	this.symbolKeyActivityMap_.set(symbol, enable);
+};
+
+
+/**
  * Returns a count of active keys.
  * @return {number} Count of active symbol keys.
  */
 sia.ui.Keypad.prototype.getActiveSymbolKeyCount = function() {
-	var keys = this.symbolComponentMap_.getValues();
-	return goog.array.reduce(keys, function(res, key) {
-		return res + key.isActive();
+	var states = this.symbolKeyActivityMap_.getValues();
+	return goog.array.reduce(states, function(res, state) {
+		return res + state;
 	}, 0);
 };
 

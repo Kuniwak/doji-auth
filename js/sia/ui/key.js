@@ -69,9 +69,9 @@ sia.ui.Key.prototype.enterDocument = function() {
 
 	this.getHandler().
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
-				this.handleKeydown).
+				this.handleKeyFallingEgde).
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
-				this.handleKeyup);
+				this.handleKeyRisingEgde);
 };
 
 

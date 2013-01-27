@@ -101,8 +101,8 @@ sia.events.KeyEdgeTriggerHandler.prototype.getElement = function() {
 sia.events.KeyEdgeTriggerHandler.prototype.handleKeyup_ = function(e) {
 	var keyEvent = new goog.events.KeyEvent(e.keyCode, e.charCode, false,
 			e.getBrowserEvent());
-	keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE;
-	this.dispatchEvent(keyEvent);
+		keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE;
+		this.dispatchEvent(keyEvent);
 };
 
 
@@ -115,7 +115,7 @@ sia.events.KeyEdgeTriggerHandler.prototype.handleKey_ = function(e) {
 	if (!e.repeat) {
 		var keyEvent = new goog.events.KeyEvent(e.keyCode, e.charCode, false,
 				e.getBrowserEvent());
-	keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE;
+		keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE;
 		this.dispatchEvent(keyEvent);
 	}
 };
