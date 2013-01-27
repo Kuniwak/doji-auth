@@ -47,30 +47,69 @@ sia.ui.BackspaceKey.CSS_CLASS = goog.getCssName('sia-backspace-key');
 
 
 /** @override */
+sia.ui.BackspaceKey.prototype.enterDocument = function() {
+	goog.base(this, 'enterDocument');
+
+	var parent = this.getParent();
+	this.setEnabled(parent.getActiveSymbolKeyCount() <= 0 &&
+			parent.getCombinationalSymbols().getCount() > 0);
+
+	this.getHandler().listen(this.getParent(), [
+		sia.ui.Keypad.EventType.PUSHED,
+		sia.ui.Keypad.EventType.POPPED], this.handleChangeSymbolsCount);
+};
+
+
+/** @override */
 sia.ui.BackspaceKey.prototype.getKeyCode = function() {
 	return this.keyCode_;
 };
 
 
 /** @override */
-sia.ui.BackspaceKey.prototype.handleActivate = function(e) {
+sia.ui.BackspaceKey.prototype.handlePostactivate = function(e) {
 	var parent = this.getParent();
 	if (parent) {
-		parent.setInactiveSymbolKeysEnabled(false);
+		goog.array.forEach(parent.getSymbolKeys(), function(key) {
+			key.setEnabled(false);
+		});
 	}
 };
 
 
 /** @override */
-sia.ui.BackspaceKey.prototype.handleDeactivate = function(e) {
+sia.ui.BackspaceKey.prototype.handlePostdeactivate = function(e) {
 	var parent = this.getParent();
 	if (parent) {
-		if (parent.getCombinationalSymbols().getCount() <= 0) {
-			parent.setBackspaceKeyEnabled(false);
-		}
-		parent.getCombinationalSymbols().pop();
-		parent.setInactiveSymbolKeysEnabled(true);
-		parent.update();
+		console.log(this.isActive(), this.isEnabled());
+		parent.popAppendedSymbols();
+		goog.array.forEach(parent.getSymbolKeys(), function(key) {
+			key.setEnabled(true);
+		});
+	}
+};
+
+
+/** @override */
+sia.ui.BackspaceKey.prototype.handleChangeSymbolsCount = function(e) {
+	var parent = this.getParent();
+
+	// The reason why the count of active keys are compared to 1 is the symbol
+	// key is active yet when the #handleChangeSymbolsCount was done.
+	var enable = parent.getActiveSymbolKeyCount() <= 0 &&
+			parent.getCombinationalSymbols().getCount() > 0;
+
+	if (enable) {
+		this.setEnabled(enable);
+	}
+	else {
+		// Avoid a call stack overflow. #setEnabled(false) fires a deactivate event,
+		// and #handlePostdeactivate fires popped events. So, the symbol key have to be
+		// disabled before calling #setEnabled(false) on #handleChangeSymbolsCount.
+		//this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, false);
+		this.setEnabled(enable);
+		//this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
+>>>>>>> keyevent-without-crossbrowser
 	}
 };
 
@@ -87,7 +126,7 @@ sia.ui.BackspaceKeyRenderer = function() {
 };
 goog.inherits(sia.ui.BackspaceKeyRenderer, goog.ui.ButtonRenderer);
 goog.ui.registry.setDefaultRenderer(sia.ui.BackspaceKey,
-		sia.ui.BackspaceKeyRenderer);
+		function() { return new sia.ui.BackspaceKeyRenderer(); });
 
 
 /** @override */

@@ -2,7 +2,7 @@
 // Please do not edit.
 goog.addDependency('../../../sia/js/sia/auth/authhelper.js', ['sia.auth.AuthenticationHelper'], ['goog.asserts']);
 goog.addDependency('../../../sia/js/sia/events/keyhandler.js', ['sia.events.KeyEdgeTriggerHandler', 'sia.events.KeyEdgeTriggerHandler.EventType'], ['goog.events.EventHandler', 'goog.events.EventTarget', 'goog.events.EventType', 'goog.events.KeyHandler']);
-goog.addDependency('../../../sia/js/sia/events/touchhandler.js', ['sia.events.TouchHandler'], ['goog.events.EventHandler', 'goog.events.EventTarget', 'goog.structs.Map']);
+goog.addDependency('../../../sia/js/sia/events/touchhandler.js', ['sia.events.TouchEnterLeaveHandler', 'sia.events.TouchHandler'], ['goog.events.EventHandler', 'goog.events.EventTarget', 'goog.structs.Map', 'goog.structs.Set']);
 goog.addDependency('../../../sia/js/sia/secrets/combinationalsymbols.js', ['sia.secrets.CombinationalSymbols'], ['goog.array', 'goog.asserts', 'goog.json', 'goog.structs.Set', 'sia.secrets.VirtualSymbol', 'sia.secrets.resolveSet']);
 goog.addDependency('../../../sia/js/sia/secrets/virtualsymbols.js', ['sia.secrets.VirtualSymbol', 'sia.secrets.resolveSet'], ['goog.array', 'goog.asserts', 'goog.structs', 'goog.structs.Map']);
 goog.addDependency('../../../sia/js/sia/sia.js', ['sia'], ['goog.debug.Console', 'goog.debug.LogManager', 'goog.debug.Logger', 'goog.debug.Logger.Level', 'goog.dom', 'goog.events', 'goog.events.KeyNames', 'goog.iter', 'goog.json', 'goog.object', 'goog.ui.Component', 'sia.auth.AuthenticationHelper', 'sia.ui.Indicator', 'sia.ui.Keypad']);

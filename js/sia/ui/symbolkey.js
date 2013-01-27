@@ -33,6 +33,18 @@ sia.ui.SymbolKey = function(symbol, opt_renderer, opt_domHelper) {
 goog.inherits(sia.ui.SymbolKey, sia.ui.Key);
 
 
+/** @override */
+sia.ui.SymbolKey.prototype.enterDocument = function() {
+	goog.base(this, 'enterDocument');
+
+	var parent = this.getParent();
+	this.getHandler().listen(parent, [
+			sia.ui.Keypad.EventType.APPENDED,
+			sia.ui.Keypad.EventType.REMOVED,
+			sia.ui.Keypad.EventType.POPPED], this.handleChangeSymbolsCount);
+};
+
+
 /**
  * Returns a symbol of the key.
  * @return {?string} The symbol.
@@ -43,45 +55,22 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handleActivate = function(e) {
+sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
 	var parent = this.getParent();
-
-	if (parent) {
-		parent.clearTimeout();
-		if (parent.getCombinationalSymbols().getCount() >=
-				sia.secrets.CombinationalSymbols.MAX_COUNT) {
-			parent.setInactiveSymbolKeysEnabled(false);
-		}
-
-		parent.getCombinationalSymbols().append(this.getSymbol());
-		// Increment active key count.
-		parent.incrementActiveSymbolKeyCount();
-
-		parent.update();
-	}
+	var enable = parent.getCombinationalSymbols().getCount() <
+			sia.secrets.CombinationalSymbols.MAX_COUNT;
+	console.log(this.getSymbol(), parent.getCombinationalSymbols().getCount());
+	this.setEnabled(enable);
 };
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handleDeactivate = function() {
+sia.ui.SymbolKey.prototype.handlePostactivate = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
+		var symbol = this.getSymbol();
 		parent.clearTimeout();
-		// Backspace key should be disable when symbols input phase.
-		parent.setBackspaceKeyEnabled(false);
-		parent.decrementActiveSymbolKeyCount();
-
-		if (parent.getActiveSymbolKeyCount() <= 0) {
-			parent.getCombinationalSymbols().push();
-			parent.setBackspaceKeyEnabled(true);
-			if (parent.getCombinationalSymbols().getCount() >=
-					sia.secrets.CombinationalSymbols.MAX_COUNT) {
-				parent.complete();
-			}
-		}
-		else {
-			parent.setTimeout();
-		}
+		parent.appendSymbol(symbol);
 	}
 };

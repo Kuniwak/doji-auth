@@ -35,29 +35,19 @@ goog.require('sia.events.KeyEdgeTriggerHandler.EventType');
  */
 sia.ui.Key = function(opt_renderer, opt_domHelper) {
 	goog.base(this, null, opt_renderer, opt_domHelper);
-	this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
 
+	this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
 	this.keyEdgeTriggerHandler_ = new sia.events.KeyEdgeTriggerHandler();
 };
 goog.inherits(sia.ui.Key, goog.ui.Button);
 
 
-/** @override */
-sia.ui.Key.prototype.disposeInternal = function() {
-	goog.base(this, 'disposeInternal');
-	this.keyEdgeTriggerHandler_.dispose();
-};
-
-
 /**
- * Returns a combinational symbols.
- * @return {sia.secrets.CombinationalSymbols} The combinational symbols.
- * @deprecated Use getParent().getCombinationalSymbols().
+ * Whether the key is pressed.
+ * @private
+ * @type {boolean}
  */
-sia.ui.Key.prototype.getCombinationalSymbols = function() {
-	var parent = this.getParent();
-	return parent && parent.getCombinationalSymbols();
-};
+sia.ui.Key.prototype.isKeyPressed_ = false;
 
 
 /**
@@ -73,18 +63,31 @@ sia.ui.Key.prototype.getKeyCode = function() {
 sia.ui.Key.prototype.enterDocument = function() {
 	goog.base(this, 'enterDocument');
 
+	var handler = this.getHandler();
 	var keyHandler = this.keyEdgeTriggerHandler_;
 	keyHandler.attach(this.getDomHelper().getDocument());
 
 	this.getHandler().
-		listen(this, goog.ui.Component.EventType.ACTIVATE,
-			this.handleActivate).
-		listen(this, goog.ui.Component.EventType.DEACTIVATE,
-			this.handleDeactivate).
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
-			this.handleKeyFallingEgde).
+				this.handleKeydown).
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
-			this.handleKeyRisingEgde);
+				this.handleKeyup);
+};
+
+
+/** @override */
+sia.ui.Key.prototype.setState = function(state, enable) {
+	var changed = enable !== this.hasState(state) &&
+		state & goog.ui.Component.State.ACTIVE;
+	goog.base(this, 'setState', state, enable);
+	if (changed) {
+		if (enable) {
+			this.handlePostactivate();
+		}
+		else {
+			this.handlePostdeactivate();
+		}
+	}
 };
 
 
@@ -121,7 +124,7 @@ sia.ui.Key.prototype.handleKeyEventInternal = goog.functions.FALSE;
  * @protected
  * @param {?goog.events.Event} e Activate event to handle.
  */
-sia.ui.Key.prototype.handleActivate = goog.nullFunction;
+sia.ui.Key.prototype.handlePostactivate = goog.nullFunction;
 
 
 /**
@@ -129,4 +132,12 @@ sia.ui.Key.prototype.handleActivate = goog.nullFunction;
  * @protected
  * @param {?goog.events.Event} e Deactivate event to handle.
  */
-sia.ui.Key.prototype.handleDeactivate = goog.nullFunction;
+sia.ui.Key.prototype.handlePostdeactivate = goog.nullFunction;
+
+
+/**
+ * Handles a update event.
+ * @protected
+ * @param {?goog.events.Event} e Update event to handle from a parent Keypad.
+ */
+sia.ui.Key.prototype.handleUpdate = goog.nullFunction;
