@@ -33,6 +33,18 @@ sia.ui.SymbolKey = function(symbol, opt_renderer, opt_domHelper) {
 goog.inherits(sia.ui.SymbolKey, sia.ui.Key);
 
 
+/** @override */
+sia.ui.SymbolKey.prototype.enterDocument = function() {
+	goog.base(this, 'enterDocument');
+
+	var parent = this.getParent();
+	this.getHandler().listen(parent, [
+			sia.ui.Keypad.EventType.APPENDED,
+			sia.ui.Keypad.EventType.REMOVED,
+			sia.ui.Keypad.EventType.POPPED], this.handleChangeSymbolsCount);
+};
+
+
 /**
  * Returns a symbol of the key.
  * @return {?string} The symbol.
@@ -43,43 +55,22 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handlePreaction = function(e) {
+sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
 	var parent = this.getParent();
-
-	if (parent) {
-		parent.clearTimeout();
-		parent.setBackspaceKeyEnabled(false);
-		parent.getCombinationalSymbols().append(this.getSymbol());
-		parent.incrementActiveSymbolKeyCount();
-
-		if (parent.getCombinationalSymbols().getCount() >=
-				sia.secrets.CombinationalSymbols.MAX_COUNT) {
-			parent.setInactiveSymbolKeysEnabled(false);
-		}
-		parent.update();
-	}
+	var enable = parent.getCombinationalSymbols().getCount() <
+			sia.secrets.CombinationalSymbols.MAX_COUNT;
+	console.log(this.getSymbol(), parent.getCombinationalSymbols().getCount());
+	this.setEnabled(enable);
 };
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handlePostaction = function() {
+sia.ui.SymbolKey.prototype.handlePostactivate = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
+		var symbol = this.getSymbol();
 		parent.clearTimeout();
-		parent.decrementActiveSymbolKeyCount();
-
-		if (parent.getActiveSymbolKeyCount() <= 0) {
-			parent.getCombinationalSymbols().push();
-			parent.setBackspaceKeyEnabled(true);
-			if (parent.getCombinationalSymbols().getCount() >=
-					sia.secrets.CombinationalSymbols.MAX_COUNT) {
-				parent.setEnabled(false);
-				parent.complete();
-			}
-		}
-		else {
-			parent.setTimeout();
-		}
+		parent.appendSymbol(symbol);
 	}
 };

@@ -94,7 +94,7 @@ if (sia.LOG_ENABLED) {
 		sia.logger_.finer(e.type, e);
 	});
 
-	sia.numKeys_.addEventListener(sia.ui.Keypad.EventType.UPDATE, function(e) {
+	sia.numKeys_.addEventListener(goog.object.getValues(sia.ui.Keypad.EventType), function(e) {
 		var keypad = e.target;
 		sia.logger_.finer('Updated: ' + keypad.getCombinationalSymbols());
 	});
@@ -117,7 +117,7 @@ if (sia.LOG_ENABLED) {
 	});
 }
 
-sia.numKeys_.addEventListener(sia.ui.Keypad.EventType.UPDATE, function(e) {
+sia.numKeys_.addEventListener(goog.object.getValues(sia.ui.Keypad.EventType), function(e) {
 	var keypad = e.target;
 	sia.indicator_.setValue(keypad.getCombinationalSymbols().getCount());
 });

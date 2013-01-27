@@ -111,6 +111,16 @@ sia.secrets.CombinationalSymbols.prototype.getAppendedCount = function() {
 
 
 /**
+ * Whether a symbol was appended. Pushed symbols should not be evaluated.
+ * @param {string} symbol The symbol to test.
+ * @return {boolean} Whether the symbol was appended.
+ */
+sia.secrets.CombinationalSymbols.prototype.isAppended = function(symbol) {
+	return this.isInputing_ && this.getCurrentSet().contains(symbol);
+};
+
+
+/**
  * Appends a symbol.
  *
  * @param {string} symbol The symbol to append.
