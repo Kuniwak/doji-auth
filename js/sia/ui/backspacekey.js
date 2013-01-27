@@ -81,7 +81,6 @@ sia.ui.BackspaceKey.prototype.handlePostactivate = function(e) {
 sia.ui.BackspaceKey.prototype.handlePostdeactivate = function(e) {
 	var parent = this.getParent();
 	if (parent) {
-		console.log(this.isActive(), this.isEnabled());
 		parent.popAppendedSymbols();
 		goog.array.forEach(parent.getSymbolKeys(), function(key) {
 			key.setEnabled(true);
@@ -99,17 +98,7 @@ sia.ui.BackspaceKey.prototype.handleChangeSymbolsCount = function(e) {
 	var enable = parent.getActiveSymbolKeyCount() <= 0 &&
 			parent.getCombinationalSymbols().getCount() > 0;
 
-	if (enable) {
-		this.setEnabled(enable);
-	}
-	else {
-		// Avoid a call stack overflow. #setEnabled(false) fires a deactivate event,
-		// and #handlePostdeactivate fires popped events. So, the symbol key have to be
-		// disabled before calling #setEnabled(false) on #handleChangeSymbolsCount.
-		//this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, false);
-		this.setEnabled(enable);
-		//this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
-	}
+	this.setEnabled(enable);
 };
 
 

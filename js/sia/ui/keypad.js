@@ -154,7 +154,8 @@ sia.ui.Keypad.prototype.pushAppendedSymbols = function() {
 	this.getCombinationalSymbols().push();
 	if (this.getCombinationalSymbols().getCount() >=
 			sia.secrets.CombinationalSymbols.MAX_COUNT) {
-		this.dispatchEvent(sia.ui.Keypad.EventType.COMPLETE);
+		//this.dispatchEvent(sia.ui.Keypad.EventType.COMPLETE);
+		//this.dispatchEvent(sia.ui.Keypad.EventType.PUSHED);
 	}
 	else {
 		this.dispatchEvent(sia.ui.Keypad.EventType.PUSHED);
@@ -308,6 +309,7 @@ sia.ui.Keypad.prototype.setTimeout = function() {
 	}
 	this.timerId_ = goog.Timer.callOnce(this.handleTimeout,
 			sia.ui.Keypad.UPDATE_INTERVAL, this);
+	console.log('SetTimeout: ' + this.timerId_);
 };
 
 
@@ -317,6 +319,7 @@ sia.ui.Keypad.prototype.setTimeout = function() {
 sia.ui.Keypad.prototype.clearTimeout = function() {
 	if (goog.isDefAndNotNull(this.timerId_)) {
 		goog.Timer.clear(this.timerId_);
+		console.log('ClearTimeout: ' + this.timerId_);
 		this.timerId_ = null;
 	}
 };

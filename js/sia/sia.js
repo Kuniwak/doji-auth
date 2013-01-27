@@ -91,7 +91,7 @@ if (sia.LOG_ENABLED) {
 
 	goog.events.listen(sia.numKeys_, [goog.ui.Component.EventType.ACTIVATE,
 			goog.ui.Component.EventType.DEACTIVATE], function(e) {
-		sia.logger_.finer(e.type, e);
+		sia.logger_.finer(e.type + ':' + e.target.constructor.name);
 	});
 
 	sia.numKeys_.addEventListener(goog.object.getValues(sia.ui.Keypad.EventType), function(e) {

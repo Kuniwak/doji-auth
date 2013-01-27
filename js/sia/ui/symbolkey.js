@@ -58,7 +58,7 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
 sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
 	var parent = this.getParent();
 	var enable = parent.getCombinationalSymbols().getCount() <
-			sia.secrets.CombinationalSymbols.MAX_COUNT;
+			sia.secrets.CombinationalSymbols.MAX_COUNT || this.isActive();
 	this.setEnabled(enable);
 };
 
@@ -84,6 +84,7 @@ sia.ui.SymbolKey.prototype.handlePostdeactivate = function(e) {
 		parent.setSymbolKeyActive(this.getSymbol(), false);
 		if (parent.getActiveSymbolKeyCount() <= 0) {
 			parent.clearTimeout();
+			console.log(this.getSymbol(), 'Pushed');
 			parent.pushAppendedSymbols();
 		}
 		else {
