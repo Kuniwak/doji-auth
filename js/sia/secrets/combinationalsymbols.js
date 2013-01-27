@@ -16,9 +16,11 @@ goog.require('sia.secrets.VirtualSymbol');
 goog.require('sia.secrets.resolveSet');
 
 
+
 /**
  * A class for combinational symbols.
  *
+ * @constructor
  * @param {?Array.<goog.structs.Set<string>>=} opt_sets Optional array of set.
  */
 sia.secrets.CombinationalSymbols = function(opt_sets) {
@@ -52,13 +54,12 @@ sia.secrets.CombinationalSymbols.prototype.getCurrentSet = function() {
 /**
  * Resolves virtual symbols from an array of symbols sets.
  *
- * @private
- * @param {Array.<goog.structs.Set.<string>>} sets The sets of symbols.
+ * @param {Array.<goog.structs.Set.<string>>} comSymbols The sets of symbols.
  * @return {Array.<goog.structs.Map.<string, number>>} Pairs of symbols and
  *   each counts.
  */
-sia.secrets.CombinationalSymbols.resolve = function(combiNum) {
-	return goog.array.map(combiNum.sets_, function(set) {
+sia.secrets.CombinationalSymbols.resolve = function(comSymbols) {
+	return goog.array.map(comSymbols.sets_, function(set) {
 		return sia.secrets.resolveSet(set);
 	});
 };
@@ -66,7 +67,7 @@ sia.secrets.CombinationalSymbols.resolve = function(combiNum) {
 
 /**
  * Compares two combinational symbols.
- * 
+ *
  * @param {Array.<goog.structs.Set.<string>>} a The sets of symbols to compare.
  * @param {Array.<goog.structs.Set.<string>>} b The sets of symbols to compare.
  * @return {boolean} Whether the combinational symbols were matched.
@@ -82,14 +83,16 @@ sia.secrets.CombinationalSymbols.equals = function(a, b) {
 
 
 /**
+ * Max count of symbols in a combinational symbol.
  * @const
+ * @type {number}
  */
 sia.secrets.CombinationalSymbols.MAX_COUNT = 4;
 
 
 /**
- * A count of symbols.
- * @type {number}
+ * Returns a count of symbols.
+ * @return {number} Count of the symbols.
  */
 sia.secrets.CombinationalSymbols.prototype.getCount = function() {
 	return goog.array.reduce(this.sets_, function(res, set) {
@@ -99,10 +102,19 @@ sia.secrets.CombinationalSymbols.prototype.getCount = function() {
 
 
 /**
+ * Returns a count of appended symbols without pusheds.
+ * @return {number} Count of the symbols.
+ */
+sia.secrets.CombinationalSymbols.prototype.getAppendedCount = function() {
+	return this.isInputing_ ? this.getCurrentSet().getCount() : 0;
+};
+
+
+/**
  * Appends a symbol.
  *
  * @param {string} symbol The symbol to append.
- * @param {boolean} Whether the symbol was contained.
+ * @return {boolean} Whether the symbol was contained.
  */
 sia.secrets.CombinationalSymbols.prototype.append = function(symbol) {
 	if (this.getCount() < sia.secrets.CombinationalSymbols.MAX_COUNT) {
@@ -121,13 +133,17 @@ sia.secrets.CombinationalSymbols.prototype.append = function(symbol) {
  * Removes a symbol.
  *
  * @param {string} symbol The symbol to remove.
- * @param {boolean} Whether the symbol was removed.
+ * @return {boolean} Whether the symbol was removed.
  */
 sia.secrets.CombinationalSymbols.prototype.remove = function(symbol) {
 	var set = this.getCurrentSet();
-	
+
 	if (set) {
-		return set.remove(symbol);
+		var result = set.remove(symbol);
+		if (this.getAppendedCount() <= 0) {
+			this.pop();
+		}
+		return result;
 	}
 	return false;
 };
@@ -139,8 +155,8 @@ sia.secrets.CombinationalSymbols.prototype.remove = function(symbol) {
 sia.secrets.CombinationalSymbols.prototype.push = function() {
 	var MAX = sia.secrets.CombinationalSymbols.MAX_COUNT;
 	var count = this.getCount();
-	goog.asserts.assert(this.getCurrentSet().getCount() > 0,
-			'Count of the current set was less than 0: ' + count);
+	goog.asserts.assert(this.getAppendedCount() > 0,
+			'Nothing to push. The count of current set was less than 0: ' + count);
 	goog.asserts.assert(count <= MAX, 'The count was larger than the max: ' +
 			count);
 
@@ -161,12 +177,13 @@ sia.secrets.CombinationalSymbols.prototype.pop = function() {
  * Tests whether the given combinational symbols consists of the same symbols as
  * the combinational symbols.
  *
- * @param {sia.secrets.CombinationalSymbols}
+ * @param {sia.secrets.CombinationalSymbols} comSymbols Combinational symbols to
+ *   test.
  * @return {boolean} True if the given combinational symbols consists of the
- *   same symbols as this combinational symbols,
+ *   same symbols as this combinational symbols.
  */
-sia.secrets.CombinationalSymbols.prototype.equals = function(comNum) {
-	return sia.secrets.CombinationalSymbols.equals(this, comNum);
+sia.secrets.CombinationalSymbols.prototype.equals = function(comSymbols) {
+	return sia.secrets.CombinationalSymbols.equals(this, comSymbols);
 };
 
 
