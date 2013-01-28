@@ -15,6 +15,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.dataset');
 goog.require('goog.events.EventType');
+goog.require('goog.math.Vec2');
 goog.require('goog.structs');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Container');
@@ -42,6 +43,7 @@ sia.ui.Keypad = function(opt_renderer, opt_domHelper) {
 	goog.base(this, null, opt_renderer || new sia.ui.KeypadRenderer(),
 			opt_domHelper);
 
+	this.touchPositionMap_ = new goog.structs.Map();
 	this.combinationalSymbols_ = new sia.secrets.CombinationalSymbols();
 	this.touches_ = [];
 
@@ -72,9 +74,15 @@ sia.ui.Keypad.EventType = {
 
 
 /**
- * @define {number} Interval to determine mis-input.
+ * @define {number} Interval to judge whether a mis-input was occured.
  */
-sia.ui.Keypad.UPDATE_INTERVAL = 1000;
+sia.ui.Keypad.MODIFICATION_DETECTION_INTERVAL = 1000;
+
+
+/**
+ * @define {number} Interval to refresh keys activities.
+ */
+sia.ui.Keypad.REFRESH_KEY_ACTIVITIES_INTERVAL = 200;
 
 
 /**
@@ -114,6 +122,45 @@ sia.ui.Keypad.prototype.symbolKeyActivityMap_;
  * @type {goog.structs.Map<string, goog.ui.Component>}
  */
 sia.ui.Keypad.prototype.symbolComponentMap_;
+
+
+/** @override */
+sia.ui.Keypad.prototype.enterDocument = function() {
+	goog.base(this, 'enterDocument');
+	var element = this.getElement();
+
+	var timer = this.timer_ = new goog.Timer(
+			sia.ui.Keypad.REFRESH_KEY_ACTIVITIES_INTERVAL);
+
+	this.getHandler().
+		listen(element, goog.events.EventType.TOUCHSTART, this.handleTouchStart).
+		listen(element, goog.events.EventType.TOUCHMOVE, this.handleTouchMove).
+		listen(element, goog.events.EventType.TOUCHEND, this.handleTouchEnd).
+		listen(timer, goog.Timer.TICK, this.handleTouchRefresh);
+
+	timer.start();
+};
+
+
+/** @override */
+sia.ui.Keypad.prototype.disposeInternal = function() {
+	goog.base(this, 'disposeInternal');
+	if (this.timer_) {
+		this.timer_.dispose();
+	}
+};
+
+
+/** @override */
+sia.ui.Keypad.prototype.addChildAt = function(control, index, opt_render) {
+	goog.base(this, 'addChildAt', control, index, opt_render);
+	if (goog.isDef(control.getSymbol)) {
+		this.symbolComponentMap_.set(control.getSymbol(), control);
+	}
+	else {
+		this.setBackspaceKey(control);
+	}
+};
 
 
 /**
@@ -216,30 +263,6 @@ sia.ui.Keypad.prototype.getActiveSymbolKeyCount = function() {
 };
 
 
-/** @override */
-sia.ui.Keypad.prototype.enterDocument = function() {
-	goog.base(this, 'enterDocument');
-	var element = this.getElement();
-
-	this.getHandler().
-		listen(element, goog.events.EventType.TOUCHSTART, this.handleTouchStart).
-		listen(element, goog.events.EventType.TOUCHMOVE, this.handleTouchMove).
-		listen(element, goog.events.EventType.TOUCHEND, this.handleTouchEnd);
-};
-
-
-/** @override */
-sia.ui.Keypad.prototype.addChildAt = function(control, index, opt_render) {
-	goog.base(this, 'addChildAt', control, index, opt_render);
-	if (goog.isDef(control.getSymbol)) {
-		this.symbolComponentMap_.set(control.getSymbol(), control);
-	}
-	else {
-		this.setBackspaceKey(control);
-	}
-};
-
-
 /**
  * Sets a backspace key component.
  *
@@ -289,7 +312,7 @@ sia.ui.Keypad.prototype.setTimeout = function() {
 		this.clearTimeout();
 	}
 	this.timerId_ = goog.Timer.callOnce(this.handleTimeout,
-			sia.ui.Keypad.UPDATE_INTERVAL, this);
+			sia.ui.Keypad.MODIFICATION_DETECTION_INTERVAL, this);
 };
 
 
@@ -329,12 +352,47 @@ sia.ui.Keypad.prototype.updateActiveKeys = function() {
 
 
 /**
+ * Handles timeout event for refresh touches map.
+ * @protected
+ */
+sia.ui.Keypad.prototype.handleTouchRefresh = function() {
+	var map = this.touchPositionMap_;
+	goog.array.forEach(map.getValues(), function() {
+		
+	});
+	this.consoleTouchMap_();
+};
+
+
+/** @private */
+sia.ui.Keypad.prototype.consoleTouchMap_ = function() {
+	var map = this.touchPositionMap_;
+	goog.array.forEach(map.getKeys(), function(key) {
+		var vec = map.get(key);
+		console.log(key + ': {' + vec.x + ', ' + vec.y + '}');
+	});
+};
+
+
+/**
+ * Touch position map. Refreshed every {@link
+ * sia.ui.Keypad.REFRESH_KEY_ACTIVITIES_INTERVAL} milliseconds interval.
+ * @type {goog.structs.Map}
+ */
+sia.ui.Keypad.prototype.touchPositionMap_;
+
+
+/**
  * Handles a touch start event.
  * @protected
  * @param {?goog.events.Event} e Touchstart event to handle.
  */
 sia.ui.Keypad.prototype.handleTouchStart = function(e) {
-	console.log('Keypad: ' + e.type + ' <- ' + (e.target && e.target.id));
+	var touches = e.getBrowserEvent().changedTouches;
+	var map = this.touchPositionMap_;
+	goog.array.forEach(touches, function(touch) {
+		map.set(touch.identifier, new goog.math.Vec2(touch.pageX, touch.pageY));
+	});
 	e.preventDefault();
 	e.stopPropagation();
 };
@@ -346,7 +404,13 @@ sia.ui.Keypad.prototype.handleTouchStart = function(e) {
  * @param {goog.events.Event} e Touchmove event to handle.
  */
 sia.ui.Keypad.prototype.handleTouchMove = function(e) {
-	console.log('Keypad: ' + e.type + ' <- ' + (e.target && e.target.id));
+	var touches = e.getBrowserEvent().changedTouches;
+	var map = this.touchPositionMap_;
+	goog.array.forEach(touches, function(touch) {
+		var vec = map.get(touch.identifier);
+		vec.x = touch.pageX;
+		vec.y = touch.pageY;
+	});
 	e.preventDefault();
 	e.stopPropagation();
 };
@@ -358,10 +422,14 @@ sia.ui.Keypad.prototype.handleTouchMove = function(e) {
  * @param {goog.events.Event} e Touchend event to handle.
  */
 sia.ui.Keypad.prototype.handleTouchEnd = function(e) {
-	console.log('Keypad: ' + e.type + ' <- ' + (e.target && e.target.id));
+	var touches = e.getBrowserEvent().changedTouches;
+	var map = this.touchPositionMap_;
+	goog.array.forEach(touches, function(touch) {
+		map.remove(touch.identifier);
+	});
 	e.preventDefault();
 	e.stopPropagation();
-}
+};
 
 
 
@@ -382,8 +450,7 @@ goog.inherits(sia.ui.KeypadRenderer, goog.ui.ContainerRenderer);
  * @const
  * @type {string}
  */
-sia.ui.KeypadRenderer.ROW_CSS_CLASS = goog.getCssName(
-		'sia-keys-row');
+sia.ui.KeypadRenderer.ROW_CSS_CLASS = goog.getCssName('sia-keys-row');
 
 
 /** @override */
