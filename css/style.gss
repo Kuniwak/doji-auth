@@ -133,13 +133,19 @@ div.sia-keys-row-2x {
 
 div.sia-numerical-key {
 	@mixin key-dark();
+	cursor: pointer;
 }
 
 div.sia-numerical-key-active {
 	@mixin key-bright();
 }
 
-div.sia-virtual-symbol-key, div.sia-backspace-key, div.sia-null-key {
+div.sia-virtual-symbol-key, div.sia-backspace-key {
+	@mixin key-bright();
+	cursor: pointer;
+}
+
+div.sia-null-key {
 	@mixin key-bright();
 }
 
@@ -153,6 +159,7 @@ div.sia-numerical-key-disabled {
 
 div.sia-numerical-key-disabled, div.sia-virtual-symbol-key-disabled, div.sia-backspace-key-disabled {
 	color: hsl(222, 8.6%, 70%);
+	cursor: default;
 }
 
 div.sia-symbol{
