@@ -37,15 +37,12 @@ goog.inherits(sia.events.KeyEdgeTriggerHandler, goog.events.EventTarget);
  * @enum {string}
  */
 sia.events.KeyEdgeTriggerHandler.EventType = {
-	/**
-	 * Key falling edge event. The event will be fired when a keydown event was
-	 * fired first on an attached element.
+  /**
+	 * Dispatched after a key falling edge (like keydown but do not repeat)
+	 * occured.
 	 */
 	FALLING_EDGE: 'keyfallingedge',
-	/**
-	 * Key rising edge event. The event will be fired when a keyup event was
-	 * fired first on an attached element.
-	 */
+  /** Dispatched after key rising edge (like keyup) occured. */
 	RISING_EDGE: 'keyrisingedge'
 };
 
