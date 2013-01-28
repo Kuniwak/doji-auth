@@ -58,10 +58,10 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
 /**
  * Handles a change symbols count event as:
  * <ul>
- * <li>{@link sia.ui.Keypad.APPENDED},
- * <li>{@link sia.ui.Keypad.REMOVED},
- * <li>{@link sia.ui.Keypad.POPPED},
- * <li>{@link sia.ui.Keypad.COMPLETE}.
+ * <li>{@link sia.ui.Keypad.EventType.APPENDED}
+ * <li>{@link sia.ui.Keypad.EventType.REMOVED}
+ * <li>{@link sia.ui.Keypad.EventType.POPPED}
+ * <li>{@link sia.ui.Keypad.EventType.COMPLETE}
  * </ul>
  * @param {goog.events.Event} e The change symbols event to handle.
  * @protected
