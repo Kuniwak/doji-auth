@@ -68,7 +68,7 @@ sia.App.ELEMENT_ID = 'sia-keys';
 
 
 /**
- * Default authenticator is (1, 2, 3), 5.
+ * Default authenticator is &quot;(1 2 3) 5&quot;.
  * The bracket means simulataneous input.
  * @const
  * @type {sia.secrets.CombinationalSymbols}
@@ -136,12 +136,12 @@ sia.App.prototype.getAuthenticator = function() {
  */
 sia.App.prototype.handleComplete = function(e) {
 	var keypad = this.getAppInterface().getKeypad();
-	var result = this.getAutheticationHelper().authenticate(
-			keypad.getCombinationalSymbols());
+	var symbols = keypad.getCombinationalSymbols();
+	var result = this.getAutheticationHelper().authenticate(symbols);
 
+	alert(result ? 'O' : 'X');
 	if (sia.App.LOG_ENABLED) {
-		var selializable = keypad.getCombinationalSymbols().toSerializable(true);
-		this.logger_.finer('Resolved: ' + goog.json.serialize(selializable));
+		this.logger_.finer('Resolved: ' + symbols.toString(true));
 		this.logger_.fine('Result: ' + (result ? 'Success' : 'Failed'));
 	}
 };
