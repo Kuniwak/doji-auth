@@ -29,7 +29,7 @@ goog.require('sia.events.KeyEdgeTriggerHandler.EventType');
  * @extends {goog.ui.Button}
  *
  * @param {goog.ui.ButtonRenderer=} opt_renderer Renderer used to render or
- *   decorate the numerical key; defaults to {@link sia.ui.ButtonRenderer}.
+ *   decorate the numerical key; defaults to {@link sia.ui.KeyRenderer}.
  * @param {goog.dom.DomHelper=} opt_domHelper DOM helper, used for document
  *   interaction.
  */
@@ -72,10 +72,7 @@ sia.ui.Key.prototype.enterDocument = function() {
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
 				this.handleKeyFallingEgde).
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
-				this.handleKeyRisingEgde).
-		listen(element, goog.events.EventType.TOUCHSTART, this.handleTouchStart).
-		listen(element, goog.events.EventType.TOUCHMOVE, this.handleTouchMove).
-		listen(element, goog.events.EventType.TOUCHEND, this.handleTouchEnd);
+				this.handleKeyRisingEgde);
 };
 
 
@@ -96,28 +93,26 @@ sia.ui.Key.prototype.setState = function(state, enable) {
 
 
 /**
- * Handles key falling edge event. Set an active state, if the event target is
- * the element.
+ * Handles key {@link sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE}.
+ * Set this key active, if an event target is this key.
+ * @param {goog.events.KeyEvent} e Key event to handle.
  */
 sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
 	if (e.keyCode === this.getKeyCode()) {
-		if (this.isEnabled()) {
-			this.setActive(true);
-		}
+		this.setActive(true);
 		e.getBrowserEvent().preventDefault();
 	}
 };
 
 
 /**
- * Handles key rising edge event. Set an inactive state, if the event target is
- * the element.
+ * Handles key {@link sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE}.
+ * Set this key active, if an event target is this key.
+ * @param {goog.events.KeyEvent} e Key event to handle.
  */
 sia.ui.Key.prototype.handleKeyRisingEgde = function(e) {
 	if (e.keyCode === this.getKeyCode()) {
-		if (this.isEnabled()) {
-			this.setActive(false);
-		}
+		this.setActive(false);
 		e.getBrowserEvent().preventDefault();
 	}
 };
@@ -130,52 +125,12 @@ sia.ui.Key.prototype.handleKeyEventInternal = goog.functions.FALSE;
 /**
  * Handles an activated event.
  * @protected
- * @param {?goog.events.Event} e Activated event to handle.
  */
 sia.ui.Key.prototype.handleActivated = goog.nullFunction;
 
 
 /**
- * Handles an deactivated event.
+ * Handles a deactivated event.
  * @protected
- * @param {?goog.events.Event} e Deactivated event to handle.
  */
 sia.ui.Key.prototype.handleDeactivated = goog.nullFunction;
-
-
-/**
- * Handles a touch start event.
- * @protected
- * @param {?goog.events.Event} e Touchstart event to handle.
- */
-sia.ui.Key.prototype.handleTouchStart = function(e) {
-	console.log('Key: ' + e.type + ' <- ' + (e.target && e.target.id));
-	this.setActive(true);
-	e.preventDefault();
-	e.stopPropagation();
-};
-
-
-/**
- * Handles a touch move event.
- * @protected
- * @param {goog.events.Event} e Touchmove event to handle.
- */
-sia.ui.Key.prototype.handleTouchMove = function(e) {
-	console.log('Key: ' + e.type + ' <- ' + (e.target && e.target.id));
-	e.preventDefault();
-	e.stopPropagation();
-};
-
-
-/**
- * Handles a touch end event.
- * @protected
- * @param {goog.events.Event} e Touchend event to handle.
- */
-sia.ui.Key.prototype.handleTouchEnd = function(e) {
-	console.log('Key: ' + e.type + ' <- ' + (e.target && e.target.id));
-	this.setActive(false);
-	e.preventDefault();
-	e.stopPropagation();
-}
