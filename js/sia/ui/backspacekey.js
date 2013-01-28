@@ -56,7 +56,8 @@ sia.ui.BackspaceKey.prototype.enterDocument = function() {
 
 	this.getHandler().listen(this.getParent(), [
 		sia.ui.Keypad.EventType.PUSHED,
-		sia.ui.Keypad.EventType.POPPED], this.handleChangeSymbolsCount);
+		sia.ui.Keypad.EventType.POPPED,
+		sia.ui.Keypad.EventType.COMPLETED], this.handleSimultaneousInputPeriod);
 };
 
 
@@ -67,7 +68,7 @@ sia.ui.BackspaceKey.prototype.getKeyCode = function() {
 
 
 /** @override */
-sia.ui.BackspaceKey.prototype.handlePostactivate = function(e) {
+sia.ui.BackspaceKey.prototype.handleActivated = function(e) {
 	var parent = this.getParent();
 	if (parent) {
 		goog.array.forEach(parent.getSymbolKeys(), function(key) {
@@ -78,7 +79,7 @@ sia.ui.BackspaceKey.prototype.handlePostactivate = function(e) {
 
 
 /** @override */
-sia.ui.BackspaceKey.prototype.handlePostdeactivate = function(e) {
+sia.ui.BackspaceKey.prototype.handleDeactivated = function(e) {
 	var parent = this.getParent();
 	if (parent) {
 		parent.popAppendedSymbols();
@@ -89,12 +90,19 @@ sia.ui.BackspaceKey.prototype.handlePostdeactivate = function(e) {
 };
 
 
-/** @override */
-sia.ui.BackspaceKey.prototype.handleChangeSymbolsCount = function(e) {
+/**
+ * Handles a simulataneous input period event as:
+ * <ul>
+ * <li>{@link sia.ui.Keypad.EventType.PUSHED}
+ * <li>{@link sia.ui.Keypad.EventType.POPPED}
+ * <li>{@link sia.ui.Keypad.EventType.COMPLETED}
+ * </ul>
+ * @param {goog.events.Event} e The simulataneous input event to handle.
+ * @protected
+ */
+sia.ui.BackspaceKey.prototype.handleSimultaneousInputPeriod = function(e) {
 	var parent = this.getParent();
 
-	// The reason why the count of active keys are compared to 1 is the symbol
-	// key is active yet when the #handleChangeSymbolsCount was done.
 	var enable = parent.getActiveSymbolKeyCount() <= 0 &&
 			parent.getCombinationalSymbols().getCount() > 0;
 

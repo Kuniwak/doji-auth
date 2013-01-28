@@ -44,6 +44,9 @@ sia.ui.Keypad = function(opt_renderer, opt_domHelper) {
 
 	this.combinationalSymbols_ = new sia.secrets.CombinationalSymbols();
 	this.touches_ = [];
+
+	this.symbolKeyActivityMap_ = new goog.structs.Map();
+	this.symbolComponentMap_ = new goog.structs.Map();
 };
 goog.inherits(sia.ui.Keypad, goog.ui.Container);
 
@@ -53,11 +56,18 @@ goog.inherits(sia.ui.Keypad, goog.ui.Container);
  * @enum {string}
  */
 sia.ui.Keypad.EventType = {
+  /** Dispatched after a symbol was appended. */
 	APPENDED: 'appended',
+  /** Dispatched after a symbol was removed. */
 	REMOVED: 'removed',
+  /** Dispatched after symbols were pushed. */
 	PUSHED: 'pushed',
+  /** Dispatched after symbols were popped. */
 	POPPED: 'popped',
-	COMPLETE: 'complete'
+  /** Dispatched before inputs was complete. */
+	COMPLETE: 'complete',
+  /** Dispatched after inputs was complete. */
+	COMPLETED: 'completed'
 };
 
 
@@ -72,9 +82,7 @@ sia.ui.Keypad.UPDATE_INTERVAL = 1000;
  * @const
  * @type {string}
  */
-sia.ui.Keypad.CSS_CLASS = goog.getCssName('sia-buttons');
-goog.ui.registry.setDecoratorByClassName(sia.ui.Keypad.CSS_CLASS,
-		sia.ui.Keypad);
+sia.ui.Keypad.CSS_CLASS = goog.getCssName('sia-keys');
 
 
 // Register a decorator factory function for goog.ui.Buttons.
@@ -97,7 +105,7 @@ sia.ui.Keypad.prototype.timerId_ = null;
  * @private
  * @type {goog.structs.Map<string, number>}
  */
-sia.ui.Keypad.prototype.symbolKeyActivityMap_ = new goog.structs.Map();
+sia.ui.Keypad.prototype.symbolKeyActivityMap_;
 
 
 /**
@@ -105,7 +113,7 @@ sia.ui.Keypad.prototype.symbolKeyActivityMap_ = new goog.structs.Map();
  * @private
  * @type {goog.structs.Map<string, goog.ui.Component>}
  */
-sia.ui.Keypad.prototype.symbolComponentMap_ = new goog.structs.Map();
+sia.ui.Keypad.prototype.symbolComponentMap_;
 
 
 /**
@@ -119,7 +127,7 @@ sia.ui.Keypad.prototype.getCombinationalSymbols = function() {
 
 /**
  * Appends a symbol.
- * @param {string} The symbol to append.
+ * @param {string} symbol The symbol to append.
  * @return {boolean} Whether the symbol was appended.
  */
 sia.ui.Keypad.prototype.appendSymbol = function(symbol) {
@@ -133,7 +141,7 @@ sia.ui.Keypad.prototype.appendSymbol = function(symbol) {
 
 /**
  * Removes a symbol.
- * @param {string} The symbol to remvoe.
+ * @param {string} symbol The symbol to remvoe.
  * @return {boolean} Whether the symbol was removed.
  */
 sia.ui.Keypad.prototype.removeSymbol = function(symbol) {
@@ -154,8 +162,10 @@ sia.ui.Keypad.prototype.pushAppendedSymbols = function() {
 	this.getCombinationalSymbols().push();
 	if (this.getCombinationalSymbols().getCount() >=
 			sia.secrets.CombinationalSymbols.MAX_COUNT) {
-		//this.dispatchEvent(sia.ui.Keypad.EventType.COMPLETE);
-		//this.dispatchEvent(sia.ui.Keypad.EventType.PUSHED);
+		this.dispatchEvent(sia.ui.Keypad.EventType.COMPLETE);
+		this.getCombinationalSymbols().clear();
+		this.setEnabled(true);
+		this.dispatchEvent(sia.ui.Keypad.EventType.COMPLETED);
 	}
 	else {
 		this.dispatchEvent(sia.ui.Keypad.EventType.PUSHED);
@@ -185,6 +195,16 @@ sia.ui.Keypad.prototype.setSymbolKeyActive = function(symbol, enable) {
 
 
 /**
+ * Whether a symbol key is active.
+ * @param {string} symbol The symbol to sets activity.
+ * @return {boolean} Whether the symbol is active.
+ */
+sia.ui.Keypad.prototype.isActiveSymbolKey = function(symbol) {
+	return !!this.symbolKeyActivityMap_.get(symbol);
+};
+
+
+/**
  * Returns a count of active keys.
  * @return {number} Count of active symbol keys.
  */
@@ -205,23 +225,8 @@ sia.ui.Keypad.prototype.enterDocument = function() {
 		listen(element, goog.events.EventType.TOUCHSTART, this.handleTouchStart).
 		listen(element, goog.events.EventType.TOUCHMOVE, this.handleTouchMove).
 		listen(element, goog.events.EventType.TOUCHEND, this.handleTouchEnd);
-
-	this.initialize();
 };
 
-
-sia.ui.Keypad.prototype.handleTouchStart = function(e) {
-	var touches = e.getBrowserEvent().touches;
-};
-
-sia.ui.Keypad.prototype.handleTouchMove = function(e) {
-	var e = e.getBrowserEvent();
-	console.log(e);
-};
-sia.ui.Keypad.prototype.handleTouchEnd = function(e) {
-	var e = e.getBrowserEvent();
-	console.log(e);
-};
 
 /** @override */
 sia.ui.Keypad.prototype.addChildAt = function(control, index, opt_render) {
@@ -256,30 +261,6 @@ sia.ui.Keypad.prototype.getBackspaceKey = function() {
 
 
 /**
- * Calls a function for each child in an array, and if the function returns true
- * adds the child to a new array.
- *
- * @param {function(this:T,?,number):?} f The function to call for every child
- *	 component; should take 2 arguments (the child and its index).
- * @param {T=} opt_obj Used as the 'this' object in f when called.
- * @return {Array.<goog.ui.Control>} Children in which only controls that
- *	 passed the test are present.
- */
-sia.ui.Keypad.prototype.filterChildren = function(f, opt_obj) {
-	var children = [];
-	var childCount = 0;
-
-	this.forEachChild(function(child, index) {
-		if (f.call(opt_obj, child, index)) {
-			children[childCount++] = child;
-		}
-	});
-
-	return children;
-};
-
-
-/**
  * Enables or disables a backspace key.
  * @param {boolean} enable Whether to enable or disable the component.
  */
@@ -309,7 +290,6 @@ sia.ui.Keypad.prototype.setTimeout = function() {
 	}
 	this.timerId_ = goog.Timer.callOnce(this.handleTimeout,
 			sia.ui.Keypad.UPDATE_INTERVAL, this);
-	console.log('SetTimeout: ' + this.timerId_);
 };
 
 
@@ -319,7 +299,6 @@ sia.ui.Keypad.prototype.setTimeout = function() {
 sia.ui.Keypad.prototype.clearTimeout = function() {
 	if (goog.isDefAndNotNull(this.timerId_)) {
 		goog.Timer.clear(this.timerId_);
-		console.log('ClearTimeout: ' + this.timerId_);
 		this.timerId_ = null;
 	}
 };
@@ -350,29 +329,39 @@ sia.ui.Keypad.prototype.updateActiveKeys = function() {
 
 
 /**
- * Initializes keypad states.
+ * Handles a touch start event.
+ * @protected
+ * @param {?goog.events.Event} e Touchstart event to handle.
  */
-sia.ui.Keypad.prototype.initialize = function() {
-	this.clearTimeout();
-	this.getCombinationalSymbols().clear();
-	this.setEnabled(true);
+sia.ui.Keypad.prototype.handleTouchStart = function(e) {
+	console.log('Keypad: ' + e.type + ' <- ' + (e.target && e.target.id));
+	e.preventDefault();
+	e.stopPropagation();
 };
 
 
 /**
- * Fires a complete event.
+ * Handles a touch move event.
+ * @protected
+ * @param {goog.events.Event} e Touchmove event to handle.
  */
-sia.ui.Keypad.prototype.complete = function() {
-	console.log(this.getCombinationalSymbols());
+sia.ui.Keypad.prototype.handleTouchMove = function(e) {
+	console.log('Keypad: ' + e.type + ' <- ' + (e.target && e.target.id));
+	e.preventDefault();
+	e.stopPropagation();
 };
 
 
 /**
- * Fires an update event.
+ * Handles a touch end event.
+ * @protected
+ * @param {goog.events.Event} e Touchend event to handle.
  */
-sia.ui.Keypad.prototype.update = function() {
-	this.dispatchEvent(sia.ui.Keypad.EventType.UPDATE);
-};
+sia.ui.Keypad.prototype.handleTouchEnd = function(e) {
+	console.log('Keypad: ' + e.type + ' <- ' + (e.target && e.target.id));
+	e.preventDefault();
+	e.stopPropagation();
+}
 
 
 

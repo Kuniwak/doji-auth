@@ -63,6 +63,7 @@ sia.ui.Key.prototype.getKeyCode = function() {
 sia.ui.Key.prototype.enterDocument = function() {
 	goog.base(this, 'enterDocument');
 
+	var element = this.getElement();
 	var handler = this.getHandler();
 	var keyHandler = this.keyEdgeTriggerHandler_;
 	keyHandler.attach(this.getDomHelper().getDocument());
@@ -71,7 +72,10 @@ sia.ui.Key.prototype.enterDocument = function() {
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
 				this.handleKeyFallingEgde).
 		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
-				this.handleKeyRisingEgde);
+				this.handleKeyRisingEgde).
+		listen(element, goog.events.EventType.TOUCHSTART, this.handleTouchStart).
+		listen(element, goog.events.EventType.TOUCHMOVE, this.handleTouchMove).
+		listen(element, goog.events.EventType.TOUCHEND, this.handleTouchEnd);
 };
 
 
@@ -82,10 +86,10 @@ sia.ui.Key.prototype.setState = function(state, enable) {
 	goog.base(this, 'setState', state, enable);
 	if (changed) {
 		if (enable) {
-			this.handlePostactivate();
+			this.handleActivated();
 		}
 		else {
-			this.handlePostdeactivate();
+			this.handleDeactivated();
 		}
 	}
 };
@@ -96,10 +100,12 @@ sia.ui.Key.prototype.setState = function(state, enable) {
  * the element.
  */
 sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
-	if (this.isEnabled() && e.keyCode === this.getKeyCode()) {
-		this.setActive(true);
+	if (e.keyCode === this.getKeyCode()) {
+		if (this.isEnabled()) {
+			this.setActive(true);
+		}
+		e.getBrowserEvent().preventDefault();
 	}
-	e.getBrowserEvent().preventDefault();
 };
 
 
@@ -108,10 +114,12 @@ sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
  * the element.
  */
 sia.ui.Key.prototype.handleKeyRisingEgde = function(e) {
-	if (this.isEnabled() && e.keyCode === this.getKeyCode()) {
-		this.setActive(false);
+	if (e.keyCode === this.getKeyCode()) {
+		if (this.isEnabled()) {
+			this.setActive(false);
+		}
+		e.getBrowserEvent().preventDefault();
 	}
-	e.getBrowserEvent().preventDefault();
 };
 
 
@@ -120,24 +128,54 @@ sia.ui.Key.prototype.handleKeyEventInternal = goog.functions.FALSE;
 
 
 /**
- * Handles a preaction event.
+ * Handles an activated event.
  * @protected
- * @param {?goog.events.Event} e Activate event to handle.
+ * @param {?goog.events.Event} e Activated event to handle.
  */
-sia.ui.Key.prototype.handlePostactivate = goog.nullFunction;
+sia.ui.Key.prototype.handleActivated = goog.nullFunction;
 
 
 /**
- * Handles a postaction event.
+ * Handles an deactivated event.
  * @protected
- * @param {?goog.events.Event} e Deactivate event to handle.
+ * @param {?goog.events.Event} e Deactivated event to handle.
  */
-sia.ui.Key.prototype.handlePostdeactivate = goog.nullFunction;
+sia.ui.Key.prototype.handleDeactivated = goog.nullFunction;
 
 
 /**
- * Handles a update event.
+ * Handles a touch start event.
  * @protected
- * @param {?goog.events.Event} e Update event to handle from a parent Keypad.
+ * @param {?goog.events.Event} e Touchstart event to handle.
  */
-sia.ui.Key.prototype.handleUpdate = goog.nullFunction;
+sia.ui.Key.prototype.handleTouchStart = function(e) {
+	console.log('Key: ' + e.type + ' <- ' + (e.target && e.target.id));
+	this.setActive(true);
+	e.preventDefault();
+	e.stopPropagation();
+};
+
+
+/**
+ * Handles a touch move event.
+ * @protected
+ * @param {goog.events.Event} e Touchmove event to handle.
+ */
+sia.ui.Key.prototype.handleTouchMove = function(e) {
+	console.log('Key: ' + e.type + ' <- ' + (e.target && e.target.id));
+	e.preventDefault();
+	e.stopPropagation();
+};
+
+
+/**
+ * Handles a touch end event.
+ * @protected
+ * @param {goog.events.Event} e Touchend event to handle.
+ */
+sia.ui.Key.prototype.handleTouchEnd = function(e) {
+	console.log('Key: ' + e.type + ' <- ' + (e.target && e.target.id));
+	this.setActive(false);
+	e.preventDefault();
+	e.stopPropagation();
+}

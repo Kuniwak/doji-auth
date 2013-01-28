@@ -31,26 +31,6 @@ sia.secrets.CombinationalSymbols = function(opt_sets) {
 	this.isInputing_ = false;
 };
 
-
-/**
- * Clears a combinational symbols.
- */
-sia.secrets.CombinationalSymbols.prototype.clear = function() {
-	this.sets_ = [];
-	this.isInputing_ = false;
-};
-
-
-/**
- * Returns a current set.
- *
- * @return {goog.structs.Set} set Current set.
- */
-sia.secrets.CombinationalSymbols.prototype.getCurrentSet = function() {
-	return goog.array.peek(this.sets_);
-};
-
-
 /**
  * Resolves virtual symbols from an array of symbols sets.
  *
@@ -88,6 +68,59 @@ sia.secrets.CombinationalSymbols.equals = function(a, b) {
  * @type {number}
  */
 sia.secrets.CombinationalSymbols.MAX_COUNT = 4;
+
+
+/**
+ * Returns selializable (jsonable) object.
+ *
+ * @param {Array.<goog.structs.Set.<string>>} comSymbols Symbols set to
+ *   selialize.
+ * @param {boolean=} opt_resolve Whether enable to resolve. Default is not
+ *   resolving.
+ * @return {Array.<Array.<string>>} Selialized object.
+ */
+sia.secrets.CombinationalSymbols.prototype.toSerializable = function(
+		opt_resolve) {
+	if (opt_resolve) {
+		var resolvedMaps = sia.secrets.CombinationalSymbols.resolve(this);
+		return goog.array.map(resolvedMaps, function(map) {
+			var symbols = map.getKeys();
+			var resolvedSymbols = [];
+			goog.array.forEach(symbols, function(symbol) {
+				var count = map.get(symbol);
+				for (var i = 0; i < count; i++) {
+					resolvedSymbols.push(symbol);
+				}
+			});
+			return resolvedSymbols;
+		});
+	}
+	else {
+		return goog.array.map(this.sets_, function(set) {
+			return set.getValues();
+		});
+	}
+};
+
+
+/**
+ * Clears a combinational symbols.
+ */
+sia.secrets.CombinationalSymbols.prototype.clear = function() {
+	this.sets_ = [];
+	this.isInputing_ = false;
+};
+
+
+/**
+ * Returns a current set.
+ *
+ * @return {goog.structs.Set} set Current set.
+ */
+sia.secrets.CombinationalSymbols.prototype.getCurrentSet = function() {
+	return goog.array.peek(this.sets_);
+};
+
 
 
 /**
@@ -213,10 +246,10 @@ sia.secrets.CombinationalSymbols.prototype.clone = function() {
 
 /**
  * Returns a JSON style string of the combinational symbols.
+ * @param {boolean=} opt_resolve Whether enable to resolve. Default is not
+ *   resolving.
  * @return {string} The string.
  */
-sia.secrets.CombinationalSymbols.prototype.toString = function() {
-	return goog.json.serialize(goog.array.map(this.sets_, function(set) {
-		return set.getValues();
-	}));
+sia.secrets.CombinationalSymbols.prototype.toString = function(opt_resolve) {
+	return goog.json.serialize(this.toSerializable(opt_resolve));
 };

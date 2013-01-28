@@ -27,3 +27,11 @@ sia.ui.Indicator = function(opt_domHelper) {
 	this.setOrientation(goog.ui.ProgressBar.Orientation.HORIZONTAL);
 };
 goog.inherits(sia.ui.Indicator, goog.ui.ProgressBar);
+
+
+/**
+ * A class name for an indicator.
+ * @const
+ * @type {string}
+ */
+sia.ui.Indicator.CSS_CLASS = goog.getCssName('sia-indicator');

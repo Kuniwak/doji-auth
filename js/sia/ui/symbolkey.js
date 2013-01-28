@@ -41,7 +41,8 @@ sia.ui.SymbolKey.prototype.enterDocument = function() {
 	this.getHandler().listen(parent, [
 			sia.ui.Keypad.EventType.APPENDED,
 			sia.ui.Keypad.EventType.REMOVED,
-			sia.ui.Keypad.EventType.POPPED], this.handleChangeSymbolsCount);
+			sia.ui.Keypad.EventType.POPPED,
+			sia.ui.Keypad.EventType.COMPLETED], this.handleChangeSymbolsCount);
 };
 
 
@@ -54,37 +55,47 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
 };
 
 
-/** @override */
+/**
+ * Handles a change symbols count event as:
+ * <ul>
+ * <li>{@link sia.ui.Keypad.APPENDED},
+ * <li>{@link sia.ui.Keypad.REMOVED},
+ * <li>{@link sia.ui.Keypad.POPPED},
+ * <li>{@link sia.ui.Keypad.COMPLETE}.
+ * </ul>
+ * @param {goog.events.Event} e The change symbols event to handle.
+ * @protected
+ */
 sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
 	var parent = this.getParent();
-	var enable = parent.getCombinationalSymbols().getCount() <
-			sia.secrets.CombinationalSymbols.MAX_COUNT || this.isActive();
+	var count = parent.getCombinationalSymbols().getCount();
+	var MAX = sia.secrets.CombinationalSymbols.MAX_COUNT;
+	var enable = count < MAX || parent.isActiveSymbolKey(this.getSymbol());
 	this.setEnabled(enable);
 };
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handlePostactivate = function(e) {
+sia.ui.SymbolKey.prototype.handleActivated = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
 		var symbol = this.getSymbol();
 		parent.clearTimeout();
-		parent.appendSymbol(symbol);
 		parent.setSymbolKeyActive(symbol, true);
+		parent.appendSymbol(symbol);
 	}
 };
 
 
 /** @override */
-sia.ui.SymbolKey.prototype.handlePostdeactivate = function(e) {
+sia.ui.SymbolKey.prototype.handleDeactivated = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
 		parent.setSymbolKeyActive(this.getSymbol(), false);
 		if (parent.getActiveSymbolKeyCount() <= 0) {
 			parent.clearTimeout();
-			console.log(this.getSymbol(), 'Pushed');
 			parent.pushAppendedSymbols();
 		}
 		else {
