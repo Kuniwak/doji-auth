@@ -2,8 +2,8 @@
 // http://orgachem.mit-license.org
 
 /**
- * @fileoverview The script for Secret Information for SIA (Simultaneous
- * Inputable Authentication).
+ * @fileoverview The script for combinational symbols as a secret information
+ *   module for SIA (Simultaneous Inputable Authentication).
  * @author orga.chem.job@gmail.com (OrgaChem)
  */
 

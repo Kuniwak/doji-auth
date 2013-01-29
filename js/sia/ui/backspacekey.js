@@ -2,8 +2,8 @@
 // http://orgachem.mit-license.org
 
 /**
- * @fileoverview The script for a backspace key for SIA (Simultaneous
- * Inputable Authentication).
+ * @fileoverview The script for a backspace key for SIA (Simultaneous Inputable
+ *   Authentication).
  * @author orga.chem.job@gmail.com (OrgaChem)
  */
 
@@ -13,6 +13,7 @@ goog.provide('sia.ui.BackspaceKeyRenderer');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.ui.registry');
+goog.require('sia.debug');
 goog.require('sia.ui.Key');
 
 
@@ -44,6 +45,14 @@ goog.inherits(sia.ui.BackspaceKey, sia.ui.Key);
  * @type {string}
  */
 sia.ui.BackspaceKey.CSS_CLASS = goog.getCssName('sia-backspace-key');
+
+
+/**
+ * Key code to activate this key.
+ * @private
+ * @type {goog.events.KeyCodes}
+ */
+sia.ui.BackspaceKey.prototype.keyCode_;
 
 
 /** @override */
@@ -81,11 +90,17 @@ sia.ui.BackspaceKey.prototype.handleActivated = function(e) {
 /** @override */
 sia.ui.BackspaceKey.prototype.handleDeactivated = function(e) {
 	var parent = this.getParent();
-	if (parent) {
+	if (parent && parent.getCombinationalSymbols().getCount() > 0) {
 		parent.popAppendedSymbols();
+
 		goog.array.forEach(parent.getSymbolKeys(), function(key) {
 			key.setEnabled(true);
 		});
+
+		if (sia.debug.LOG_ENABLE) {
+			var logger = goog.debug.LogManager.getLogger('sia.ui.BackspaceKey');
+			logger.finest('Backspace: ' + parent.getCombinationalSymbols());
+		}
 	}
 };
 

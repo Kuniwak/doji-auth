@@ -1,7 +1,10 @@
 <!DOCTYPE HTML>
-<!-- Yuki Kokubun (UEC Tokyo)            -->
-<!-- This script licensed under the MIT. -->
-<!-- http://orgachem.mit-license.org     -->
+<!--
+	Copyright 2013 Yuki Kokubun (UEC Tokyo)
+
+	This script licensed under the MIT.
+	http://orgachem.mit-license.org
+-->
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -11,47 +14,52 @@
 	<link media="all" rel="stylesheet" href="css/style.min.css" type="text/css" />
 </head>
 <body>
-<!--
-	<div id="init-disp">
-		<div class="init-auth-box">
-			<button id="start">Test</button>
-			<button id="init-auth">Set PIN</button>
+	<div id="sia-panel-control" class="sia-panel sia-panel-control">
+		<div class="sia-symbol-container">
+			<img src="img/correct.png" alt="correct" class="sia-symbol sia-symbol-correct" style="display: none;" />
+			<img src="img/wrong.png" alt="wrong" class="sia-symbol sia-symbol-wrong" style="display: none;" />
+			<img src="img/key.png" alt="key" class="sia-symbol sia-symbol-key" />
+			<img src="img/padlock.png" alt="key" class="sia-symbol sia-symbol-padlock" style="display: none;" />
+		</div>
+		<div class="sia-answer sia-answer-correct">Correct answer <span class="sia-answer-value">1235</span></div>
+		<div class="sia-answer sia-answer-last">Your answer <span class="sia-answer-value">1235</span></div>
+		<div class="sia-button-container">
+			<button class="sia-button sia-button-start">Try</button>
 		</div>
 	</div>
--->
-	<div id="sia-keys" class="sia-keys">
+	<div id="sia-panel-keys" class="sia-panel sia-panel-keys">
 		<div id="sia-indicator" class="sia-indicator"></div>
 		<div class="sia-keys-row sia-keys-row-2x">
-			<div id="sia-symbol-key-SMALL" class="sia-virtual-symbol-key" data-symbol="S"><div class="sia-symbol">S</div></div>
-			<div id="sia-symbol-key-MEDIUM" class="sia-virtual-symbol-key" data-symbol="M"><div class="sia-symbol">M</div></div>
-			<div id="sia-symbol-key-LARGE" class="sia-virtual-symbol-key" data-symbol="L"><div class="sia-symbol">L</div></div>
+			<div id="sia-symbol-key-SMALL" class="sia-virtual-symbol-key" data-symbol="S"><div class="sia-symbol" data-symbol="S">S</div></div>
+			<div id="sia-symbol-key-MEDIUM" class="sia-virtual-symbol-key" data-symbol="M"><div class="sia-symbol" data-symbol="M">M</div></div>
+			<div id="sia-symbol-key-LARGE" class="sia-virtual-symbol-key" data-symbol="L"><div class="sia-symbol" data-symbol="L">L</div></div>
 		</div>
 		<div class="sia-keys-row">
-			<div id="sia-symbol-key-1" class="sia-numerical-key" data-symbol="1"><div class="sia-symbol">1</div></div>
-			<div id="sia-symbol-key-2" class="sia-numerical-key" data-symbol="2"><div class="sia-symbol">2</div></div>
-			<div id="sia-symbol-key-3" class="sia-numerical-key" data-symbol="3"><div class="sia-symbol">3</div></div>
-		</div>
-		<div class="sia-keys-row">
-			<div id="sia-symbol-key-4" class="sia-numerical-key" data-symbol="4"><div class="sia-symbol">4</div></div>
-			<div id="sia-symbol-key-5" class="sia-numerical-key" data-symbol="5"><div class="sia-symbol">5</div></div>
-			<div id="sia-symbol-key-6" class="sia-numerical-key" data-symbol="6"><div class="sia-symbol">6</div></div>
-		</div>
-		<div class="sia-keys-row">
-			<div id="sia-symbol-key-7" class="sia-numerical-key" data-symbol="7"><div class="sia-symbol">7</div></div>
-			<div id="sia-symbol-key-8" class="sia-numerical-key" data-symbol="8"><div class="sia-symbol">8</div></div>
-			<div id="sia-symbol-key-9" class="sia-numerical-key" data-symbol="9"><div class="sia-symbol">9</div></div>
+			<div id="sia-symbol-key-1" class="sia-numerical-key" data-symbol="1"><div class="sia-symbol" data-symbol="1">1</div></div>
+			<div id="sia-symbol-key-2" class="sia-numerical-key" data-symbol="2"><div class="sia-symbol" data-symbol="2">2</div></div>
+			<div id="sia-symbol-key-3" class="sia-numerical-key" data-symbol="3"><div class="sia-symbol" data-symbol="3">3</div></div>
+		</div>                                                                                                        
+		<div class="sia-keys-row">                                                                                    
+			<div id="sia-symbol-key-4" class="sia-numerical-key" data-symbol="4"><div class="sia-symbol" data-symbol="4">4</div></div>
+			<div id="sia-symbol-key-5" class="sia-numerical-key" data-symbol="5"><div class="sia-symbol" data-symbol="5">5</div></div>
+			<div id="sia-symbol-key-6" class="sia-numerical-key" data-symbol="6"><div class="sia-symbol" data-symbol="6">6</div></div>
+		</div>                                                                                                        
+		<div class="sia-keys-row">                                                                                    
+			<div id="sia-symbol-key-7" class="sia-numerical-key" data-symbol="7"><div class="sia-symbol" data-symbol="7">7</div></div>
+			<div id="sia-symbol-key-8" class="sia-numerical-key" data-symbol="8"><div class="sia-symbol" data-symbol="8">8</div></div>
+			<div id="sia-symbol-key-9" class="sia-numerical-key" data-symbol="9"><div class="sia-symbol" data-symbol="9">9</div></div>
 		</div>
 		<div class="sia-keys-row">
 			<div id="sia-symbol-key-NONE" class="sia-null-key"><div class="sia-symbol">&nbsp;</div></div>
-			<div id="sia-symbol-key-0" class="sia-numerical-key" data-symbol="0"><div class="sia-symbol">0</div></div>
-			<div id="sia-symbol-key-BS" class="sia-backspace-key" data-symbol="BS"><div class="sia-symbol">&#9003;</div></div>
+			<div id="sia-symbol-key-0" class="sia-numerical-key" data-symbol="0"><div class="sia-symbol" data-symbol="0">0</div></div>
+			<div id="sia-symbol-key-BS" class="sia-backspace-key" data-symbol="BS"><div class="sia-symbol" data-symbol="BS">&#9003;</div></div>
 		</div>
 	</div>
+	<script src="js/sia.min.js" type="text/javascript"></script>
+	<!--
 	<script src="../closure-library/closure/goog/base.js" type="text/javascript"></script>
 	<script src="js/deps.js" type="text/javascript"></script>
 	<script type="text/javascript">goog.require('sia');</script>
-	<!--
-	<script src="js/sia.min.js" type="text/javascript"></script>
 	-->
 </body>
 </html>

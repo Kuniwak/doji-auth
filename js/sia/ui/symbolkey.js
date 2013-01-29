@@ -2,8 +2,8 @@
 // http://orgachem.mit-license.org
 
 /**
- * @fileoverview The script for a numeric key for SIA (Simultaneous
- * Inputable Authentication).
+ * @fileoverview The script for a symbol key for SIA (Simultaneous Inputable
+ *   Authentication).
  * @author orga.chem.job@gmail.com (OrgaChem)
  */
 
@@ -21,7 +21,7 @@ goog.require('sia.ui.Key');
  *
  * @param {string} symbol The symbol of the key.
  * @param {goog.ui.ButtonRenderer=} opt_renderer Renderer used to render or
- *   decorate the numerical key; defaults to {@link sia.ui.ButtonRenderer}.
+ *   decorate the numerical key; defaults to {@link goog.ui.ButtonRenderer}.
  * @param {goog.dom.DomHelper=} opt_domHelper DOM helper, used for document
  *   interaction.
  */
@@ -70,7 +70,7 @@ sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
 	var parent = this.getParent();
 	var count = parent.getCombinationalSymbols().getCount();
 	var MAX = sia.secrets.CombinationalSymbols.MAX_COUNT;
-	var enable = count < MAX || parent.isActiveSymbolKey(this.getSymbol());
+	var enable = count < MAX || this.isActive();
 	this.setEnabled(enable);
 };
 
@@ -82,7 +82,6 @@ sia.ui.SymbolKey.prototype.handleActivated = function(e) {
 	if (parent) {
 		var symbol = this.getSymbol();
 		parent.clearTimeout();
-		parent.setSymbolKeyActive(symbol, true);
 		parent.appendSymbol(symbol);
 	}
 };
@@ -93,7 +92,6 @@ sia.ui.SymbolKey.prototype.handleDeactivated = function(e) {
 	var parent = this.getParent();
 
 	if (parent) {
-		parent.setSymbolKeyActive(this.getSymbol(), false);
 		if (parent.getActiveSymbolKeyCount() <= 0) {
 			parent.clearTimeout();
 			parent.pushAppendedSymbols();

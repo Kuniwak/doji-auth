@@ -2,7 +2,7 @@
 // http://orgachem.mit-license.org
 
 /**
- * @fileoverview The script for a function key for SIA (Simultaneous
+ * @fileoverview The script for a virtual symbol key for SIA (Simultaneous
  * Inputable Authentication).
  * @author orga.chem.job@gmail.com (OrgaChem)
  */

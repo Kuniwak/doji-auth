@@ -2,8 +2,8 @@
 // http://orgachem.mit-license.org
 
 /**
- * @fileoverview The script for authentication module for SIA (Simultaneous
- *   Inputable Authentication).
+ * @fileoverview The script for authentication helper module for SIA
+ *   (Simultaneous Inputable Authentication).
  * @author orga.chem.job@gmail.com (OrgaChem)
  */
 
@@ -26,12 +26,21 @@ sia.auth.AuthenticationHelper = function(opt_correct) {
 
 
 /**
- * Sets a indentification.
+ * Sets an indentification.
  * @param {*} correct Autheticator is an any object has {@code a.equals(b)}
  *   method.
  */
 sia.auth.AuthenticationHelper.prototype.setCorrect = function(correct) {
 	this.correct_ = correct;
+};
+
+
+/**
+ * Returns an indentification.
+ * @return {*} Autheticator is an any object has {@code a.equals(b)} method.
+ */
+sia.auth.AuthenticationHelper.prototype.getCorrect = function(correct) {
+	return this.correct_;
 };
 
 
