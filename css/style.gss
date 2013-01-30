@@ -5,6 +5,8 @@
  * http://orgachem.mit-license.org
  */
 
+/*{{{ Definitions */
+
 @defmixin gradient(POS, COLORS) {
 	background-image: linear-gradient(POS, COLORS);
 	/* @alternate */ background-image: -webkit-linear-gradient(POS, COLORS); /* Chrome 10+,Safari 5.1+ */
@@ -81,6 +83,7 @@
 
 @def P_BAR_COLORS_A hsl(0, 0%, 50%), hsl(0, 0%, 30%), hsl(0, 0%, 20%), hsl(0, 0%, 30%);
 @def P_BAR_COLORS_B hsl(0, 0%, 100%), hsl(0, 0%, 60%), hsl(0, 0%, 50%), hsl(0, 0%, 60%);
+/*}}}*/
 
 * {
 	-webkit-touch-callout: none;
@@ -93,15 +96,17 @@ html, body {
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-	font-family: 'LucidaGrande' 'Helvetica', sans-serif;
+	font-family: 'LucidaGrande', 'Helvetica', sans-serif;
 }
 
+/*{{{ Panel style */
 div.sia-panel {
 	position: absolute;
 	width: 100%;
 	height: 100%;
 }
 
+/*{{{ Control panel style */
 div.sia-panel-control {
 	z-index: 100;
 	background: url(../img/Background-stripe.png);
@@ -110,7 +115,7 @@ div.sia-panel-control {
 div.sia-symbol-container {
 	text-align: center;
 	width: 80%;
-	margin: 50px auto;
+	margin: 40px auto;
 	padding: 13px;
 	background-color: #fff;
 	border-radius: 5px;
@@ -121,7 +126,7 @@ div.sia-symbol-container {
 
 div.sia-answer {
 	width: 80%;
-	margin: 50px auto;
+	margin: 30px auto;
 	padding: 13px;
 	background-color: #fff;
 	border-radius: 5px;
@@ -146,12 +151,17 @@ span.sia-answer-value {
 	padding-left: 0;
 }
 
+span.sia-answer-value-undefined {
+	color: #aaa;
+}
+
 div.sia-button-container {
 	text-align: center;
 }
 
+/*}}}*/
 
-/*{{{ App interface style */
+/*{{{ Keypad panel style */
 div.sia-panel-keys {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
@@ -208,13 +218,14 @@ div.sia-virtual-symbol-key, div.sia-backspace-key {
 
 div.sia-null-key {
 	@mixin key-bright();
+	cursor: default;
 }
 
 div.sia-virtual-symbol-key-active, div.sia-backspace-key-active {
 	@mixin key-dark();
 }
 
-div.sia-numerical-key-disabled {
+div.sia-numerical-key-disabled, div.sia-numerical-key-disabled {
 	color: hsl(222, 8.6%, 60%);
 }
 
@@ -231,12 +242,9 @@ div.sia-symbol{
 }
 /*}}}*/
 /*}}}*/
+/*}}}*/
 
-div.w3c {
-	font-family: 'Georgia-Bold';
-	width: 40px;
-}
-
-div.html5 {
-	width: 30px;
+div.footer {
+	margin-right: 10%;
+	text-align: right;
 }
