@@ -323,9 +323,12 @@ sia.ui.Keypad.prototype.removeSymbol = function(symbol) {
 sia.ui.Keypad.prototype.pushAppendedSymbols = function() {
 	goog.asserts.assert(this.getActiveSymbolKeyCount() === 0,
 			'Some keys are active yet. Remaines: ' + this.getActiveSymbolKeyCount());
-
+	var map;
 	var symbols = this.getCombinationalSymbols();
 	symbols.push();
+
+	// Avoud unknown cause bugs by touchId missing.
+	this.getTouchedKeyMap().clear();
 
 	if (this.getCombinationalSymbols().getCount() >=
 			sia.secrets.CombinationalSymbols.MAX_COUNT) {
@@ -388,16 +391,34 @@ sia.ui.Keypad.prototype.handleTouchRefresh = function() {
 		});
 
 		// Test symbol swapping occured.
-		if (last !== found && !symbols.isAppended(found.getSymbol()) &&
-				found.isEnabled() && last.isEnabled()) {
-			if (sia.debug.LOG_ENABLED) {
-				sia.ui.Keypad.logger_.finest('Swapped: ' + last.getSymbol() + ' to ' +
-					found.getSymbol() + ' by ' + touchId);
+		if (last && found) {
+			if (last !== found && !symbols.isAppended(found.getSymbol()) &&
+					found.isEnabled() && last.isEnabled()) {
+				if (sia.debug.LOG_ENABLED) {
+					sia.ui.Keypad.logger_.finest('Swapped: ' + last.getSymbol() + ' to ' +
+						found.getSymbol() + ' by ' + touchId);
+				}
+				found.setActive(true);
+				last.setActive(false);
+				this.removeSymbol(last.getSymbol());
+				keyMap.set(touchId, found);
 			}
-			found.setActive(true);
-			last.setActive(false);
-			this.removeSymbol(last.getSymbol());
-			keyMap.set(touchId, found);
+		}
+		else {
+			if (sia.debug.LOG_ENABLED) {
+				var msg = 'TouchId missing: ';
+				if (last) {
+					msg += last.getId();
+				}
+				else if (found) {
+					msg += found.getId();
+				}
+				else {
+					msg += '?';
+				}
+				sia.ui.Key.logger_.warning(msg + ' by ' + touchId +
+						' when the element found.');
+			}
 		}
 	}, this);
 };

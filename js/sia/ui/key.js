@@ -213,7 +213,8 @@ sia.ui.Key.prototype.handleTouchStart = function(e) {
 				touch.identifier);
 	}
 
-	if (this.isEnabled()) {
+	if (this.isEnabled() && parent.getCombinationalSymbols().getCount() <=
+			sia.secrets.CombinationalSymbols.MAX_COUNT) {
 		keyMap.set(touch.identifier, this);
 		this.setActive(true);
 	}
@@ -237,18 +238,27 @@ sia.ui.Key.prototype.handleTouchEnd = function(e) {
 		return (target = touch.target) === element ||
 			target.parentElement === element;
 	});
+	var touchId = touch.identifier;
 
 	if (sia.debug.LOG_ENABLED) {
 		sia.ui.Key.logger_.finest('TouchEnd: ' + this.getId() + ' by ' +
-				touch.identifier);
+				touchId);
 	}
 
 	// This 'key' is no match for this key if the target was swapped.
-	var key = keyMap.get(touch.identifier);
+	var key = keyMap.get(touchId);
 
-	if (key.isEnabled()) {
-		key.setActive(false);
-		keyMap.remove(touch.identifier);
+	if (key) {
+		if (key.isEnabled()) {
+			key.setActive(false);
+			keyMap.remove(touchId);
+		}
+	}
+	else {
+		if (sia.debug.LOG_ENABLED) {
+			sia.ui.Key.logger_.warning('TouchId missing: ' + this.getId() + ' by ' +
+					touchId + '.');
+		}
 	}
 };
 

@@ -17,7 +17,6 @@ goog.require('goog.dom.classes');
 goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.Button');
-goog.require('goog.ui.Checkbox');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Control');
 goog.require('goog.ui.NativeButtonRenderer');
@@ -281,9 +280,7 @@ sia.ui.ControlPanel.prototype.enterDocument = function() {
 		listen(this.startButton_, goog.ui.Component.EventType.ACTION,
 				this.handleButtonClick).
 		listen(this.getElement(), goog.object.getValues(goog.events.EventType),
-				this.propagetionStopper).
-		listen(this.getElement(), goog.events.EventType.TOUCHMOVE,
-				this.defaultPreventer);
+				this.propagetionStopper);
 };
 
 
