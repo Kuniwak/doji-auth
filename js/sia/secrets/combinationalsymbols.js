@@ -10,7 +10,6 @@
 goog.provide('sia.secrets.CombinationalSymbols');
 goog.require('goog.array');
 goog.require('goog.asserts');
-goog.require('goog.json');
 goog.require('goog.structs.Set');
 goog.require('sia.secrets.VirtualSymbol');
 goog.require('sia.secrets.resolveSet');
@@ -251,5 +250,7 @@ sia.secrets.CombinationalSymbols.prototype.clone = function() {
  * @return {string} The string.
  */
 sia.secrets.CombinationalSymbols.prototype.toString = function(opt_resolve) {
-	return goog.json.serialize(this.toSerializable(opt_resolve));
+	return this.toSerializable(opt_resolve).map(function(arr) {
+		return '(' + arr.join(' ') + ')';
+	}).join(' ');
 };

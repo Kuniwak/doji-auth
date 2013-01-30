@@ -13,9 +13,11 @@ goog.provide('sia.ui.ControlPanel.EventType');
 goog.provide('sia.ui.ControlPanel.SymbolType');
 goog.require('goog.debug.LogManager');
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
 goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.Button');
+goog.require('goog.ui.Checkbox');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Control');
 goog.require('goog.ui.NativeButtonRenderer');
@@ -195,8 +197,16 @@ sia.ui.ControlPanel.prototype.padlockSymbolElement_;
  * @param {sia.secrets.CombinationalSymbols} val Correct symbols to set.
  */
 sia.ui.ControlPanel.prototype.setCorrectAnswer = function(val) {
-	goog.dom.setTextContent(this.correctAnswerElement_, val.getCount() ?
-			val.toString(true) : 'undefined');
+	if (val.getCount()) {
+		goog.dom.classes.enable(this.correctAnswerElement_, goog.getCssName(
+					sia.ui.ControlPanel.ANS_VAL_CSS_CLASS, 'undefined'), false);
+		goog.dom.setTextContent(this.correctAnswerElement_, val.toString(true));
+	}
+	else {
+		goog.dom.classes.enable(this.correctAnswerElement_, goog.getCssName(
+					sia.ui.ControlPanel.ANS_VAL_CSS_CLASS, 'undefined'), true);
+		goog.dom.setTextContent(this.correctAnswerElement_, 'undefined');
+	}
 };
 
 
@@ -205,8 +215,16 @@ sia.ui.ControlPanel.prototype.setCorrectAnswer = function(val) {
  * @param {sia.secrets.CombinationalSymbols} val Last symbols to set.
  */
 sia.ui.ControlPanel.prototype.setLastAnswer = function(val) {
-	goog.dom.setTextContent(this.lastAnswerElement_, val.getCount() ?
-			val.toString(true) : 'undefined');
+	if (val.getCount()) {
+		goog.dom.classes.enable(this.lastAnswerElement_, goog.getCssName(
+					sia.ui.ControlPanel.ANS_VAL_CSS_CLASS, 'undefined'), false);
+		goog.dom.setTextContent(this.lastAnswerElement_, val.toString(true));
+	}
+	else {
+		goog.dom.classes.enable(this.lastAnswerElement_, goog.getCssName(
+					sia.ui.ControlPanel.ANS_VAL_CSS_CLASS, 'undefined'), true);
+		goog.dom.setTextContent(this.lastAnswerElement_, 'undefined');
+	}
 };
 
 
@@ -263,7 +281,9 @@ sia.ui.ControlPanel.prototype.enterDocument = function() {
 		listen(this.startButton_, goog.ui.Component.EventType.ACTION,
 				this.handleButtonClick).
 		listen(this.getElement(), goog.object.getValues(goog.events.EventType),
-				this.propagetionStopper);
+				this.propagetionStopper).
+		listen(this.getElement(), goog.events.EventType.TOUCHMOVE,
+				this.defaultPreventer);
 };
 
 
@@ -337,9 +357,19 @@ sia.ui.ControlPanel.prototype.handleButtonClick = function(e) {
 
 /**
  * Stop a propagation.
- * @param {goog.events.Event} e Click event to handle.
+ * @param {goog.events.Event} e Event to handle.
  * @protected
  */
 sia.ui.ControlPanel.prototype.propagetionStopper = function(e) {
 	e.stopPropagation();
+};
+
+
+/**
+ * Prevents default.
+ * @param {goog.events.Event} e Event to handle.
+ * @protected
+ */
+sia.ui.ControlPanel.prototype.defaultPreventer = function(e) {
+	e.preventDefault();
 };

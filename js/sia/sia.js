@@ -97,7 +97,7 @@ if (sia.debug.LOG_ENABLED) {
 	 * @type {goog.debug.Logger}
 	 * @private
 	 */
-	sia.App.logger_ = this.logger_ = goog.debug.LogManager.getLogger('sia');
+	sia.App.logger_ = goog.debug.LogManager.getLogger('sia');
 }
 
 
