@@ -31,22 +31,22 @@ goog.require('sia.ui.SymbolKey');
  *   interaction.
  */
 sia.ui.VirtualSymbolKey = function(symbol, opt_renderer, opt_domHelper) {
-	goog.base(this, symbol, opt_renderer ||
-			new sia.ui.VirtualSymbolKeyRenderer(), opt_domHelper);
+  goog.base(this, symbol, opt_renderer ||
+      new sia.ui.VirtualSymbolKeyRenderer(), opt_domHelper);
 
-	var keyCode;
-	switch (symbol) {
-		case sia.secrets.VirtualSymbol.LARGE:
-			keyCode = goog.events.KeyCodes.L;
-			break;
-		case sia.secrets.VirtualSymbol.MEDIUM:
-			keyCode = goog.events.KeyCodes.M;
-			break;
-		case sia.secrets.VirtualSymbol.SMALL:
-			keyCode = goog.events.KeyCodes.S;
-			break;
-	}
-	this.keyCode_ = keyCode;
+  var keyCode;
+  switch (symbol) {
+    case sia.secrets.VirtualSymbol.LARGE:
+      keyCode = goog.events.KeyCodes.L;
+      break;
+    case sia.secrets.VirtualSymbol.MEDIUM:
+      keyCode = goog.events.KeyCodes.M;
+      break;
+    case sia.secrets.VirtualSymbol.SMALL:
+      keyCode = goog.events.KeyCodes.S;
+      break;
+  }
+  this.keyCode_ = keyCode;
 };
 goog.inherits(sia.ui.VirtualSymbolKey, sia.ui.SymbolKey);
 
@@ -61,7 +61,7 @@ sia.ui.VirtualSymbolKey.CSS_CLASS = goog.getCssName('sia-virtual-symbol-key');
 
 /** @override */
 sia.ui.VirtualSymbolKey.prototype.getKeyCode = function() {
-	return this.keyCode_;
+  return this.keyCode_;
 };
 
 
@@ -73,14 +73,14 @@ sia.ui.VirtualSymbolKey.prototype.getKeyCode = function() {
  * @extends {goog.ui.ButtonRenderer}
  */
 sia.ui.VirtualSymbolKeyRenderer = function() {
-	goog.base(this);
+  goog.base(this);
 };
 goog.inherits(sia.ui.VirtualSymbolKeyRenderer, goog.ui.ButtonRenderer);
 goog.ui.registry.setDefaultRenderer(sia.ui.VirtualSymbolKey,
-		sia.ui.VirtualSymbolKeyRenderer);
+    sia.ui.VirtualSymbolKeyRenderer);
 
 
 /** @override */
 sia.ui.VirtualSymbolKeyRenderer.prototype.getCssClass = function() {
-	return sia.ui.VirtualSymbolKey.CSS_CLASS;
+  return sia.ui.VirtualSymbolKey.CSS_CLASS;
 };

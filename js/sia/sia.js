@@ -45,36 +45,36 @@ goog.require('sia.ui.Keypad.EventType');
  *     document interaction.
  */
 sia.App = function(opt_authenticator, opt_domHelper) {
-	goog.base(this);
+  goog.base(this);
 
-	this.dom_ = opt_domHelper || goog.dom.getDomHelper();
+  this.dom_ = opt_domHelper || goog.dom.getDomHelper();
 
-	var appInterface = this.getAppInterface();
-	appInterface.decorate(goog.dom.getElement(sia.App.KEYPAD_PANEL_ID));
+  var appInterface = this.getAppInterface();
+  appInterface.decorate(goog.dom.getElement(sia.App.KEYPAD_PANEL_ID));
 
-	var controlPanel = this.getControlPanel();
-	controlPanel.decorate(goog.dom.getElement(sia.App.CONTROL_PANEL_ID));
-	this.updateControlPanel();
+  var controlPanel = this.getControlPanel();
+  controlPanel.decorate(goog.dom.getElement(sia.App.CONTROL_PANEL_ID));
+  this.updateControlPanel();
 
-	var handler = this.getHandler().
-		listen(appInterface, sia.ui.Keypad.EventType.COMPLETE,
-			this.handleComplete).
-		listen(controlPanel, sia.ui.ControlPanel.EventType.START, this.handleStart);
+  var handler = this.getHandler().
+    listen(appInterface, sia.ui.Keypad.EventType.COMPLETE,
+      this.handleComplete).
+    listen(controlPanel, sia.ui.ControlPanel.EventType.START, this.handleStart);
 
-	this.modeMap_ = new goog.structs.Map(this.mode_);
-	this.setMode(this.getMode(sia.modes.ModeType.PRE_SETTING));
+  this.modeMap_ = new goog.structs.Map(this.mode_);
+  this.setMode(this.getMode(sia.modes.ModeType.PRE_SETTING));
 
-	if (sia.debug.LOG_ENABLED) {
-		goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
-		var console = new goog.debug.Console();
-		console.setCapturing(true);
+  if (sia.debug.LOG_ENABLED) {
+    goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
+    var console = new goog.debug.Console();
+    console.setCapturing(true);
 
-		handler.listen(appInterface.getKeypad(), [
-				sia.ui.Keypad.EventType.APPENDED,
-				sia.ui.Keypad.EventType.REMOVED,
-				sia.ui.Keypad.EventType.POPPED,
-				sia.ui.Keypad.EventType.PUSHED], this.handleKeypadEvents);
-	}
+    handler.listen(appInterface.getKeypad(), [
+        sia.ui.Keypad.EventType.APPENDED,
+        sia.ui.Keypad.EventType.REMOVED,
+        sia.ui.Keypad.EventType.POPPED,
+        sia.ui.Keypad.EventType.PUSHED], this.handleKeypadEvents);
+  }
 };
 goog.inherits(sia.App, goog.events.EventTarget);
 
@@ -92,12 +92,12 @@ sia.App.CONTROL_PANEL_ID = 'sia-panel-control';
 
 
 if (sia.debug.LOG_ENABLED) {
-	/**
-	 * Logger for this application.
-	 * @type {goog.debug.Logger}
-	 * @private
-	 */
-	sia.App.logger_ = goog.debug.LogManager.getLogger('sia');
+  /**
+   * Logger for this application.
+   * @type {goog.debug.Logger}
+   * @private
+   */
+  sia.App.logger_ = goog.debug.LogManager.getLogger('sia');
 }
 
 
@@ -122,7 +122,7 @@ sia.App.prototype.mode_;
  * @param {!sia.modes.Mode} mode The mode to set.
  */
 sia.App.prototype.setMode = function(mode) {
-	this.mode_ = mode;
+  this.mode_ = mode;
 };
 
 
@@ -131,7 +131,7 @@ sia.App.prototype.setMode = function(mode) {
  * @return {!sia.modes.Mode} The mode.
  */
 sia.App.prototype.getCurrentMode = function() {
-	return this.mode_;
+  return this.mode_;
 };
 
 
@@ -141,38 +141,38 @@ sia.App.prototype.getCurrentMode = function() {
  * @return {!sia.modes.Mode} The mode.
  */
 sia.App.prototype.getMode = function(modeType) {
-	var map = this.modeMap_;
-	var mode = map.get(modeType);
-	if (!mode) {
-		switch (modeType) {
-			case sia.modes.ModeType.PRE_SETTING:
-				map.set(modeType, mode = new sia.modes.PresettingMode(this));
-				break;
-			case sia.modes.ModeType.SETTING:
-				map.set(modeType, mode = new sia.modes.SettingMode(this));
-				break;
-			case sia.modes.ModeType.PRE_TESTING:
-				map.set(modeType, mode = new sia.modes.PretestingMode(this));
-				break;
-			case sia.modes.ModeType.TESTING:
-				map.set(modeType, mode = new sia.modes.TestingMode(this));
-				break;
-			case sia.modes.ModeType.CONFIRMING:
-				map.set(modeType, mode = new sia.modes.ConfirmingMode(this));
-				break;
-			default:
-				goog.asserts.fail('Illegal mode type: ' + modeType);
-		}
-	}
-	return mode;
+  var map = this.modeMap_;
+  var mode = map.get(modeType);
+  if (!mode) {
+    switch (modeType) {
+      case sia.modes.ModeType.PRE_SETTING:
+        map.set(modeType, mode = new sia.modes.PresettingMode(this));
+        break;
+      case sia.modes.ModeType.SETTING:
+        map.set(modeType, mode = new sia.modes.SettingMode(this));
+        break;
+      case sia.modes.ModeType.PRE_TESTING:
+        map.set(modeType, mode = new sia.modes.PretestingMode(this));
+        break;
+      case sia.modes.ModeType.TESTING:
+        map.set(modeType, mode = new sia.modes.TestingMode(this));
+        break;
+      case sia.modes.ModeType.CONFIRMING:
+        map.set(modeType, mode = new sia.modes.ConfirmingMode(this));
+        break;
+      default:
+        goog.asserts.fail('Illegal mode type: ' + modeType);
+    }
+  }
+  return mode;
 };
 
 
 /** @override */
 sia.App.prototype.disposeInternal = function() {
-	goog.base(this, 'disposeInternal');
-	this.appInterface_.dispose();
-	this.controlPanel_.dispose();
+  goog.base(this, 'disposeInternal');
+  this.appInterface_.dispose();
+  this.controlPanel_.dispose();
 };
 
 
@@ -183,8 +183,8 @@ sia.App.prototype.disposeInternal = function() {
  * @protected
  */
 sia.App.prototype.getAppInterface = function() {
-	return this.appInterface_ || (this.appInterface_ =
-			new sia.ui.AppInterface(this.getDomHelper()));
+  return this.appInterface_ || (this.appInterface_ =
+      new sia.ui.AppInterface(this.getDomHelper()));
 };
 
 
@@ -193,7 +193,7 @@ sia.App.prototype.getAppInterface = function() {
  * @return {!goog.dom.DomHelper} The dom helper used on this component.
  */
 sia.App.prototype.getDomHelper = function() {
-	return this.dom_;
+  return this.dom_;
 };
 
 
@@ -205,8 +205,8 @@ sia.App.prototype.getDomHelper = function() {
  * @protected
  */
 sia.App.prototype.getControlPanel = function() {
-	return this.controlPanel_ || (this.controlPanel_ = new sia.ui.ControlPanel(
-				null, this.getDomHelper()));
+  return this.controlPanel_ || (this.controlPanel_ = new sia.ui.ControlPanel(
+        null, this.getDomHelper()));
 };
 
 
@@ -217,7 +217,7 @@ sia.App.prototype.getControlPanel = function() {
  * @protected
  */
 sia.App.prototype.getHandler = function() {
-	return this.handler_ || (this.handler_ = new goog.events.EventHandler(this));
+  return this.handler_ || (this.handler_ = new goog.events.EventHandler(this));
 };
 
 
@@ -229,8 +229,8 @@ sia.App.prototype.getHandler = function() {
  * @protected
  */
 sia.App.prototype.getAutheticationHelper = function() {
-	return this.authHelper_ || (this.authHelper_ =
-			new sia.auth.AuthenticationHelper(this.getAuthenticator()));
+  return this.authHelper_ || (this.authHelper_ =
+      new sia.auth.AuthenticationHelper(this.getAuthenticator()));
 };
 
 
@@ -242,8 +242,8 @@ sia.App.prototype.getAutheticationHelper = function() {
  * @protected
  */
 sia.App.prototype.getAuthenticator = function() {
-	return this.correct_ || (this.correct_ =
-			new sia.secrets.CombinationalSymbols());
+  return this.correct_ || (this.correct_ =
+      new sia.secrets.CombinationalSymbols());
 };
 
 
@@ -252,7 +252,7 @@ sia.App.prototype.getAuthenticator = function() {
  * @return {!sia.secrets.CombinationalSymbols} Last input.
  */
 sia.App.prototype.getLastInput = function() {
-	return this.lastInput_;
+  return this.lastInput_;
 };
 
 
@@ -262,18 +262,18 @@ sia.App.prototype.getLastInput = function() {
  * @protected
  */
 sia.App.prototype.handleComplete = function(e) {
-	var keypad = this.getAppInterface().getKeypad();
-	var authHelper = this.getAutheticationHelper();
-	var symbols = keypad.getCombinationalSymbols();
-	var result = this.getAutheticationHelper().authenticate(symbols);
+  var keypad = this.getAppInterface().getKeypad();
+  var authHelper = this.getAutheticationHelper();
+  var symbols = keypad.getCombinationalSymbols();
+  var result = this.getAutheticationHelper().authenticate(symbols);
 
-	if (sia.debug.LOG_ENABLED) {
-		sia.App.logger_.finer('Resolved: ' + symbols.toString(true));
-		sia.App.logger_.fine('Result: ' + (result ? 'Success' : 'Failed'));
-	}
+  if (sia.debug.LOG_ENABLED) {
+    sia.App.logger_.finer('Resolved: ' + symbols.toString(true));
+    sia.App.logger_.fine('Result: ' + (result ? 'Success' : 'Failed'));
+  }
 
-	this.lastInput_ = symbols.clone();
-	this.getCurrentMode().next();
+  this.lastInput_ = symbols.clone();
+  this.getCurrentMode().next();
 };
 
 
@@ -281,12 +281,12 @@ sia.App.prototype.handleComplete = function(e) {
  * Updates a control panel.
  */
 sia.App.prototype.updateControlPanel = function() {
-	var keypad = this.getAppInterface().getKeypad();
-	var authHelper = this.getAutheticationHelper();
-	var symbols = keypad.getCombinationalSymbols();
-	var controlPanel = this.getControlPanel();
-	controlPanel.setCorrectAnswer(authHelper.getCorrect());
-	controlPanel.setLastAnswer(symbols);
+  var keypad = this.getAppInterface().getKeypad();
+  var authHelper = this.getAutheticationHelper();
+  var symbols = keypad.getCombinationalSymbols();
+  var controlPanel = this.getControlPanel();
+  controlPanel.setCorrectAnswer(authHelper.getCorrect());
+  controlPanel.setLastAnswer(symbols);
 };
 
 
@@ -296,10 +296,10 @@ sia.App.prototype.updateControlPanel = function() {
  * @protected
  */
 sia.App.prototype.handleKeypadEvents = function(e) {
-	var keypad = this.getAppInterface().getKeypad();
-	if (sia.debug.LOG_ENABLED) {
-		sia.App.logger_.finer('Update: ' + keypad.getCombinationalSymbols());
-	}
+  var keypad = this.getAppInterface().getKeypad();
+  if (sia.debug.LOG_ENABLED) {
+    sia.App.logger_.finer('Update: ' + keypad.getCombinationalSymbols());
+  }
 };
 
 
@@ -309,7 +309,7 @@ sia.App.prototype.handleKeypadEvents = function(e) {
  * @protected
  */
 sia.App.prototype.handleStart = function(e) {
-	this.getCurrentMode().next();
+  this.getCurrentMode().next();
 };
 
 

@@ -39,22 +39,22 @@ goog.require('sia.events.KeyEdgeTriggerHandler.EventType');
  *   interaction.
  */
 sia.ui.Key = function(opt_renderer, opt_domHelper) {
-	goog.base(this, null, opt_renderer, opt_domHelper);
+  goog.base(this, null, opt_renderer, opt_domHelper);
 
-	this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
-	this.keyEdgeTriggerHandler_ = new sia.events.KeyEdgeTriggerHandler();
+  this.setDispatchTransitionEvents(goog.ui.Component.State.ACTIVE, true);
+  this.keyEdgeTriggerHandler_ = new sia.events.KeyEdgeTriggerHandler();
 };
 goog.inherits(sia.ui.Key, goog.ui.Button);
 
 
 if (sia.debug.LOG_ENABLED) {
-	/**
-	 * The key logger. This logger is undefined if {@code sia.debug.LOG_ENABLED}
-	 * was false.
-	 * @private
-	 * @type {goog.debug.Logger=}
-	 */
-	sia.ui.Key.logger_ = goog.debug.LogManager.getLogger('sia.ui.Key');
+  /**
+   * The key logger. This logger is undefined if {@code sia.debug.LOG_ENABLED}
+   * was false.
+   * @private
+   * @type {goog.debug.Logger=}
+   */
+  sia.ui.Key.logger_ = goog.debug.LogManager.getLogger('sia.ui.Key');
 }
 
 
@@ -70,55 +70,57 @@ sia.ui.Key.prototype.isKeyPressed_ = false;
  * Returns a key code of the key.
  * @return {?number} The key code.
  */
-sia.ui.Key.prototype.getKeyCode = function() {
-	return null;
-};
+sia.ui.Key.prototype.getKeyCode = goog.nullFunction;
+
+
+/**
+ * Returns a symbol of the key.
+ * @return {?string} The symbol.
+ */
+sia.ui.Key.prototype.getSymbol = goog.nullFunction;
 
 
 /** @override */
 sia.ui.Key.prototype.disposeInternal = function() {
-	goog.base(this, 'disposeInternal');
-	this.keyEdgeTriggerHandler_.dispose();
+  goog.base(this, 'disposeInternal');
+  this.keyEdgeTriggerHandler_.dispose();
 };
 
 
 /** @override */
 sia.ui.Key.prototype.enterDocument = function() {
-	goog.base(this, 'enterDocument');
+  goog.base(this, 'enterDocument');
 
-	var element = this.getElement();
-	var handler = this.getHandler();
-	var keyHandler = this.keyEdgeTriggerHandler_;
-	keyHandler.attach(this.getDomHelper().getDocument());
+  var element = this.getElement();
+  var handler = this.getHandler();
+  var keyHandler = this.keyEdgeTriggerHandler_;
+  keyHandler.attach(this.getDomHelper().getDocument());
 
-	var dom = this.getDomHelper();
-	var vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow(dom.getWindow());
+  var dom = this.getDomHelper();
+  var vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow(dom.getWindow());
 
-	this.getHandler().
-		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE,
-				this.handleKeyFallingEgde).
-		listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE,
-				this.handleKeyRisingEgde).
-		listen(element, goog.events.EventType.TOUCHSTART, this.handleTouchStart).
-		listen(element, [goog.events.EventType.TOUCHEND,
-				goog.events.EventType.TOUCHCANCEL], this.handleTouchEnd).
-		listen(vsm, goog.events.EventType.RESIZE, this.updateDisplayArea);
+  this.getHandler().
+      listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.
+          FALLING_EDGE, this.handleKeyFallingEgde).
+      listen(keyHandler, sia.events.KeyEdgeTriggerHandler.EventType.
+          RISING_EDGE, this.handleKeyRisingEgde).
+      listen(vsm, goog.events.EventType.RESIZE, this.updateDisplayArea);
 };
 
 
 /** @override */
 sia.ui.Key.prototype.setState = function(state, enable) {
-	var changed = enable !== this.hasState(state) &&
-		state & goog.ui.Component.State.ACTIVE;
-	goog.base(this, 'setState', state, enable);
-	if (changed) {
-		if (enable) {
-			this.handleActivated();
-		}
-		else {
-			this.handleDeactivated();
-		}
-	}
+  var changed = enable !== this.hasState(state) &&
+      state & goog.ui.Component.State.ACTIVE;
+  goog.base(this, 'setState', state, enable);
+  if (changed) {
+    if (enable) {
+      this.handleActivated();
+    }
+    else {
+      this.handleDeactivated();
+    }
+  }
 };
 
 
@@ -128,7 +130,7 @@ sia.ui.Key.prototype.setState = function(state, enable) {
  * @return {boolean} Whether the coordinate is on this key element.
  */
 sia.ui.Key.prototype.isInsideCoordinate = function(coord) {
-	return this.getDisplayArea().contains(coord);
+  return this.getDisplayArea().contains(coord);
 };
 
 
@@ -139,11 +141,11 @@ sia.ui.Key.prototype.isInsideCoordinate = function(coord) {
  * @protected
  */
 sia.ui.Key.prototype.getDisplayArea = function() {
-	if (!this.rect_) {
-		this.updateDisplayArea();
-	}
+  if (!this.rect_) {
+    this.updateDisplayArea();
+  }
 
-	return this.rect_;
+  return this.rect_;
 };
 
 
@@ -152,11 +154,11 @@ sia.ui.Key.prototype.getDisplayArea = function() {
  * @protected
  */
 sia.ui.Key.prototype.updateDisplayArea = function() {
-	goog.asserts.assert(this.isInDocument(), 'The key is not in document.');
-	var element = this.getElement();
-	var size = goog.style.getSize(element);
-	var pos = goog.style.getPosition(element);
-	this.rect_ = new goog.math.Rect(pos.x, pos.y, size.width, size.height);
+  goog.asserts.assert(this.isInDocument(), 'The key is not in document.');
+  var element = this.getElement();
+  var size = goog.style.getSize(element);
+  var pos = goog.style.getPosition(element);
+  this.rect_ = new goog.math.Rect(pos.x, pos.y, size.width, size.height);
 };
 
 
@@ -166,12 +168,12 @@ sia.ui.Key.prototype.updateDisplayArea = function() {
  * @param {goog.events.KeyEvent} e Key event to handle.
  */
 sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
-	if (e.keyCode === this.getKeyCode()) {
-		if (this.isEnabled()) {
-			this.setActive(true);
-		}
-		e.getBrowserEvent().preventDefault();
-	}
+  if (e.keyCode === this.getKeyCode()) {
+    if (this.isEnabled()) {
+      this.setActive(true);
+    }
+    e.getBrowserEvent().preventDefault();
+  }
 };
 
 
@@ -181,85 +183,12 @@ sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
  * @param {goog.events.KeyEvent} e Key event to handle.
  */
 sia.ui.Key.prototype.handleKeyRisingEgde = function(e) {
-	if (e.keyCode === this.getKeyCode()) {
-		if (this.isEnabled()) {
-			this.setActive(false);
-		}
-		e.getBrowserEvent().preventDefault();
-	}
-};
-
-
-/**
- * Handles a {@link goog.events.EventType.TOUCHSTART}.
- * @param {?goog.events.Event} e Touchstart event to handle.
- * @protected
- * @suppress {accessControls}
- */
-sia.ui.Key.prototype.handleTouchStart = function(e) {
-	var parent = this.getParent();
-	var keyMap = parent.getTouchedKeyMap();
-	var element = this.getElement();
-	var touches = e.getBrowserEvent().changedTouches;
-
-	// 2 changedTouches given when touchstart event was dispatched simulataneous.
-	var touch = goog.array.find(touches, function(touch) {
-		return (target = touch.target) === element ||
-			target.parentElement === element;
-	});
-
-	if (sia.debug.LOG_ENABLED) {
-		sia.ui.Key.logger_.finest('TouchStart: ' + this.getId() + ' by ' +
-				touch.identifier);
-	}
-
-	if (this.isEnabled() && parent.getCombinationalSymbols().getCount() <=
-			sia.secrets.CombinationalSymbols.MAX_COUNT) {
-		keyMap.set(touch.identifier, this);
-		this.setActive(true);
-	}
-};
-
-
-/**
- * Handles a {@link goog.events.EventType.TOUCHEND}.
- * @param {?goog.events.Event} e Touchstart event to handle.
- * @protected
- * @suppress {accessControls}
- */
-sia.ui.Key.prototype.handleTouchEnd = function(e) {
-	var parent = this.getParent();
-	var keyMap = parent.getTouchedKeyMap();
-	var element = this.getElement();
-	var touches = e.getBrowserEvent().changedTouches;
-
-	// 2 changedTouches given when touchstart event was dispatched simulataneous.
-	var touch = goog.array.find(touches, function(touch) {
-		return (target = touch.target) === element ||
-			target.parentElement === element;
-	});
-	var touchId = touch.identifier;
-
-	if (sia.debug.LOG_ENABLED) {
-		sia.ui.Key.logger_.finest('TouchEnd: ' + this.getId() + ' by ' +
-				touchId);
-	}
-
-	// This 'key' is no match for this key if the target was swapped.
-	var key = keyMap.get(touchId);
-
-	if (key) {
-		if (key.isEnabled()) {
-			key.setActive(false);
-			keyMap.remove(touchId);
-		}
-	}
-	else {
-		if (sia.debug.LOG_ENABLED) {
-			sia.ui.Key.logger_.warning('TouchId missing: ' + this.getId() + ' by ' +
-					touchId + '.');
-		}
-	}
+  if (e.keyCode === this.getKeyCode()) {
+    if (this.isEnabled()) {
+      this.setActive(false);
+    }
+    e.getBrowserEvent().preventDefault();
+  }
 };
 
 

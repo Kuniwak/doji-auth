@@ -19,12 +19,12 @@ goog.require('sia.secrets.CombinationalSymbols');
  * @extends {goog.ui.ProgressBar}
  */
 sia.ui.Indicator = function(opt_domHelper) {
-	goog.base(this, opt_domHelper);
+  goog.base(this, opt_domHelper);
 
-	this.setStep(1);
-	this.setMinimum(0);
-	this.setMaximum(sia.secrets.CombinationalSymbols.MAX_COUNT);
-	this.setOrientation(goog.ui.ProgressBar.Orientation.HORIZONTAL);
+  this.setStep(1);
+  this.setMinimum(0);
+  this.setMaximum(sia.secrets.CombinationalSymbols.MAX_COUNT);
+  this.setOrientation(goog.ui.ProgressBar.Orientation.HORIZONTAL);
 };
 goog.inherits(sia.ui.Indicator, goog.ui.ProgressBar);
 

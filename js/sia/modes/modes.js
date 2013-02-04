@@ -27,7 +27,7 @@ goog.require('sia.ui.ControlPanel.SymbolType');
  * @constructor
  */
 sia.modes.Mode = function(app) {
-	this.app_ = app;
+  this.app_ = app;
 };
 
 
@@ -35,11 +35,11 @@ sia.modes.Mode = function(app) {
  * @enum {number}
  */
 sia.modes.ModeType = {
-	PRE_SETTING: 0,
-	SETTING: 1,
-	PRE_TESTING: 2,
-	TESTING: 3,
-	CONFIRMING: 4
+  PRE_SETTING: 0,
+  SETTING: 1,
+  PRE_TESTING: 2,
+  TESTING: 3,
+  CONFIRMING: 4
 };
 
 
@@ -48,7 +48,7 @@ sia.modes.ModeType = {
  * @return {sia.App} Application for the mode.
  */
 sia.modes.Mode.prototype.getApp = function() {
-	return this.app_;
+  return this.app_;
 };
 
 
@@ -66,24 +66,24 @@ sia.modes.Mode.prototype.next = goog.abstractMethod;
  * @extends {sia.modes.Mode}
  */
 sia.modes.PresettingMode = function(app) {
-	goog.base(this, app);
+  goog.base(this, app);
 };
 goog.inherits(sia.modes.PresettingMode, sia.modes.Mode);
 
 
 /** @override */
 sia.modes.PresettingMode.prototype.next = function() {
-	var app = this.getApp();
-	var controlPanel = app.getControlPanel();
-	var next = app.getMode(sia.modes.ModeType.SETTING);
+  var app = this.getApp();
+  var controlPanel = app.getControlPanel();
+  var next = app.getMode(sia.modes.ModeType.SETTING);
 
-	if (sia.debug.LOG_ENABLED) {
-		var logger = goog.debug.LogManager.getLogger('sia.modes.PresettingMode');
-		logger.finer('Sets an authenticator.');
-	}
+  if (sia.debug.LOG_ENABLED) {
+    var logger = goog.debug.LogManager.getLogger('sia.modes.PresettingMode');
+    logger.finer('Sets an authenticator.');
+  }
 
-	controlPanel.setVisible(false);
-	app.setMode(next);
+  controlPanel.setVisible(false);
+  app.setMode(next);
 };
 
 
@@ -95,32 +95,32 @@ sia.modes.PresettingMode.prototype.next = function() {
  * @extends {sia.modes.Mode}
  */
 sia.modes.SettingMode = function(app) {
-	goog.base(this, app);
+  goog.base(this, app);
 };
 goog.inherits(sia.modes.SettingMode, sia.modes.Mode);
 
 
 /** @override */
 sia.modes.SettingMode.prototype.next = function() {
-	var app = this.getApp();
-	var controlPanel = app.getControlPanel();
-	var next = app.getMode(sia.modes.ModeType.PRE_TESTING);
-	var last = app.getLastInput();
+  var app = this.getApp();
+  var controlPanel = app.getControlPanel();
+  var next = app.getMode(sia.modes.ModeType.PRE_TESTING);
+  var last = app.getLastInput();
 
-	if (sia.debug.LOG_ENABLED) {
-		var logger = goog.debug.LogManager.getLogger('sia.modes.SettingMode');
-		logger.finer('Set correct: ' + last.toString() + ' as ' +
-				last.toString(true));
-	}
+  if (sia.debug.LOG_ENABLED) {
+    var logger = goog.debug.LogManager.getLogger('sia.modes.SettingMode');
+    logger.finer('Set correct: ' + last.toString() + ' as ' +
+        last.toString(true));
+  }
 
-	controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.PADLOCK);
-	app.getAutheticationHelper().setCorrect(last);
-	app.getAppInterface().getKeypad().getCombinationalSymbols().clear();
+  controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.PADLOCK);
+  app.getAutheticationHelper().setCorrect(last);
+  app.getAppInterface().getKeypad().getCombinationalSymbols().clear();
 
-	controlPanel.setButtonMsg(sia.ui.ControlPanel.ButtonMsg.TEST);
-	app.updateControlPanel();
-	controlPanel.setVisible(true);
-	app.setMode(next);
+  controlPanel.setButtonMsg(sia.ui.ControlPanel.ButtonMsg.TEST);
+  app.updateControlPanel();
+  controlPanel.setVisible(true);
+  app.setMode(next);
 };
 
 
@@ -132,24 +132,24 @@ sia.modes.SettingMode.prototype.next = function() {
  * @extends {sia.modes.Mode}
  */
 sia.modes.PretestingMode = function(app) {
-	goog.base(this, app);
+  goog.base(this, app);
 };
 goog.inherits(sia.modes.PretestingMode, sia.modes.Mode);
 
 
 /** @override */
 sia.modes.PretestingMode.prototype.next = function() {
-	var app = this.getApp();
-	var controlPanel = app.getControlPanel();
-	var next = app.getMode(sia.modes.ModeType.TESTING);
+  var app = this.getApp();
+  var controlPanel = app.getControlPanel();
+  var next = app.getMode(sia.modes.ModeType.TESTING);
 
-	if (sia.debug.LOG_ENABLED) {
-		var logger = goog.debug.LogManager.getLogger('sia.modes.PretestingMode');
-		logger.finer('Tests an authenticator.');
-	}
+  if (sia.debug.LOG_ENABLED) {
+    var logger = goog.debug.LogManager.getLogger('sia.modes.PretestingMode');
+    logger.finer('Tests an authenticator.');
+  }
 
-	controlPanel.setVisible(false);
-	app.setMode(next);
+  controlPanel.setVisible(false);
+  app.setMode(next);
 };
 
 
@@ -161,34 +161,34 @@ sia.modes.PretestingMode.prototype.next = function() {
  * @extends {sia.modes.Mode}
  */
 sia.modes.TestingMode = function(app) {
-	goog.base(this, app);
+  goog.base(this, app);
 };
 goog.inherits(sia.modes.TestingMode, sia.modes.Mode);
 
 
 /** @override */
 sia.modes.TestingMode.prototype.next = function() {
-	var app = this.getApp();
-	var controlPanel = app.getControlPanel();
-	var next = app.getMode(sia.modes.ModeType.CONFIRMING);
-	var last = app.getLastInput();
+  var app = this.getApp();
+  var controlPanel = app.getControlPanel();
+  var next = app.getMode(sia.modes.ModeType.CONFIRMING);
+  var last = app.getLastInput();
 
-	if (sia.debug.LOG_ENABLED) {
-		var logger = goog.debug.LogManager.getLogger('sia.modes.TestingMode');
-		logger.finer('Prepares testing.');
-	}
+  if (sia.debug.LOG_ENABLED) {
+    var logger = goog.debug.LogManager.getLogger('sia.modes.TestingMode');
+    logger.finer('Prepares testing.');
+  }
 
-	if (app.getAutheticationHelper().authenticate(last)) {
-		controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.CORRECT);
-	}
-	else {
-		controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.WRONG);
-	}
+  if (app.getAutheticationHelper().authenticate(last)) {
+    controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.CORRECT);
+  }
+  else {
+    controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.WRONG);
+  }
 
-	controlPanel.setButtonMsg(sia.ui.ControlPanel.ButtonMsg.OK);
-	app.updateControlPanel();
-	controlPanel.setVisible(true);
-	app.setMode(next);
+  controlPanel.setButtonMsg(sia.ui.ControlPanel.ButtonMsg.OK);
+  app.updateControlPanel();
+  controlPanel.setVisible(true);
+  app.setMode(next);
 };
 
 
@@ -200,28 +200,28 @@ sia.modes.TestingMode.prototype.next = function() {
  * @extends {sia.modes.Mode}
  */
 sia.modes.ConfirmingMode = function(app) {
-	goog.base(this, app);
+  goog.base(this, app);
 };
 goog.inherits(sia.modes.ConfirmingMode, sia.modes.Mode);
 
 
 /** @override */
 sia.modes.ConfirmingMode.prototype.next = function() {
-	var app = this.getApp();
-	var controlPanel = app.getControlPanel();
-	var next = app.getMode(sia.modes.ModeType.PRE_SETTING);
+  var app = this.getApp();
+  var controlPanel = app.getControlPanel();
+  var next = app.getMode(sia.modes.ModeType.PRE_SETTING);
 
-	if (sia.debug.LOG_ENABLED) {
-		var logger = goog.debug.LogManager.getLogger('sia.modes.ConfirmingMode');
-		logger.finer('Confirming.');
-	}
+  if (sia.debug.LOG_ENABLED) {
+    var logger = goog.debug.LogManager.getLogger('sia.modes.ConfirmingMode');
+    logger.finer('Confirming.');
+  }
 
-	controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.KEY);
+  controlPanel.setSymbolVisible(sia.ui.ControlPanel.SymbolType.KEY);
 
-	app.getAutheticationHelper().getCorrect().clear();
-	app.getAppInterface().getKeypad().getCombinationalSymbols().clear();
+  app.getAutheticationHelper().getCorrect().clear();
+  app.getAppInterface().getKeypad().getCombinationalSymbols().clear();
 
-	controlPanel.setButtonMsg(sia.ui.ControlPanel.ButtonMsg.SET);
-	app.updateControlPanel();
-	app.setMode(next);
+  controlPanel.setButtonMsg(sia.ui.ControlPanel.ButtonMsg.SET);
+  app.updateControlPanel();
+  app.setMode(next);
 };

@@ -23,29 +23,29 @@ goog.require('sia.ui.Keypad');
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  */
 sia.ui.AppInterface = function(opt_domHelper) {
-	goog.base(this, opt_domHelper);
+  goog.base(this, opt_domHelper);
 };
 goog.inherits(sia.ui.AppInterface, goog.ui.Component);
 
 
 /** @override */
 sia.ui.AppInterface.prototype.decorateInternal = function(element) {
-	goog.base(this, 'decorateInternal');
+  goog.base(this, 'decorateInternal');
 
-	var keypad = this.getKeypad();
-	keypad.decorate(this.getDomHelper().getElementByClass(
-				sia.ui.Keypad.CSS_CLASS));
+  var keypad = this.getKeypad();
+  keypad.decorate(this.getDomHelper().getElementByClass(
+        sia.ui.Keypad.CSS_CLASS));
 
-	var indicator = this.getIndicator();
-	indicator.decorate(this.getDomHelper().getElementByClass(
-				sia.ui.Indicator.CSS_CLASS));
+  var indicator = this.getIndicator();
+  indicator.decorate(this.getDomHelper().getElementByClass(
+        sia.ui.Indicator.CSS_CLASS));
 
-	this.getHandler().listen(keypad, [
-				sia.ui.Keypad.EventType.APPENDED,
-				sia.ui.Keypad.EventType.POPPED,
-				sia.ui.Keypad.EventType.REMOVED,
-				sia.ui.Keypad.EventType.COMPLETED
-			], this.handleChangeSymbolsCount);
+  this.getHandler().listen(keypad, [
+        sia.ui.Keypad.EventType.APPENDED,
+        sia.ui.Keypad.EventType.POPPED,
+        sia.ui.Keypad.EventType.REMOVED,
+        sia.ui.Keypad.EventType.COMPLETED
+      ], this.handleChangeSymbolsCount);
 };
 
 
@@ -54,11 +54,11 @@ sia.ui.AppInterface.prototype.decorateInternal = function(element) {
  * @return {!sia.ui.Keypad} The keypad.
  */
 sia.ui.AppInterface.prototype.getKeypad = function() {
-	if (!this.keypad_) {
-		this.keypad_ = new sia.ui.Keypad(null, this.getDomHelper());
-		this.addChild(this.keypad_);
-	}
-	return this.keypad_;
+  if (!this.keypad_) {
+    this.keypad_ = new sia.ui.Keypad(null, this.getDomHelper());
+    this.addChild(this.keypad_);
+  }
+  return this.keypad_;
 };
 
 
@@ -67,11 +67,11 @@ sia.ui.AppInterface.prototype.getKeypad = function() {
  * @return {!sia.ui.Indicator} The indicator.
  */
 sia.ui.AppInterface.prototype.getIndicator = function() {
-	if (!this.indicator_) {
-		this.indicator_ = new sia.ui.Indicator(this.getDomHelper());
-		this.addChild(this.indicator_);
-	}
-	return this.indicator_;
+  if (!this.indicator_) {
+    this.indicator_ = new sia.ui.Indicator(this.getDomHelper());
+    this.addChild(this.indicator_);
+  }
+  return this.indicator_;
 };
 
 
@@ -87,6 +87,6 @@ sia.ui.AppInterface.prototype.getIndicator = function() {
  * @protected
  */
 sia.ui.AppInterface.prototype.handleChangeSymbolsCount = function(e) {
-	this.getIndicator().setValue(
-			this.getKeypad().getCombinationalSymbols().getCount());
+  this.getIndicator().setValue(
+      this.getKeypad().getCombinationalSymbols().getCount());
 };

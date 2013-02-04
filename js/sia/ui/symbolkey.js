@@ -26,32 +26,29 @@ goog.require('sia.ui.Key');
  *   interaction.
  */
 sia.ui.SymbolKey = function(symbol, opt_renderer, opt_domHelper) {
-	goog.base(this, opt_renderer, opt_domHelper);
+  goog.base(this, opt_renderer, opt_domHelper);
 
-	this.symbol_ = symbol;
+  this.symbol_ = symbol;
 };
 goog.inherits(sia.ui.SymbolKey, sia.ui.Key);
 
 
 /** @override */
 sia.ui.SymbolKey.prototype.enterDocument = function() {
-	goog.base(this, 'enterDocument');
+  goog.base(this, 'enterDocument');
 
-	var parent = this.getParent();
-	this.getHandler().listen(parent, [
-			sia.ui.Keypad.EventType.APPENDED,
-			sia.ui.Keypad.EventType.REMOVED,
-			sia.ui.Keypad.EventType.POPPED,
-			sia.ui.Keypad.EventType.COMPLETED], this.handleChangeSymbolsCount);
+  var parent = this.getParent();
+  this.getHandler().listen(parent, [
+      sia.ui.Keypad.EventType.APPENDED,
+      sia.ui.Keypad.EventType.REMOVED,
+      sia.ui.Keypad.EventType.POPPED,
+      sia.ui.Keypad.EventType.COMPLETED], this.handleChangeSymbolsCount);
 };
 
 
-/**
- * Returns a symbol of the key.
- * @return {?string} The symbol.
- */
+/** @override */
 sia.ui.SymbolKey.prototype.getSymbol = function() {
-	return this.symbol_;
+  return this.symbol_;
 };
 
 
@@ -67,37 +64,37 @@ sia.ui.SymbolKey.prototype.getSymbol = function() {
  * @protected
  */
 sia.ui.SymbolKey.prototype.handleChangeSymbolsCount = function(e) {
-	var parent = this.getParent();
-	var count = parent.getCombinationalSymbols().getCount();
-	var MAX = sia.secrets.CombinationalSymbols.MAX_COUNT;
-	var enable = count < MAX || this.isActive();
-	this.setEnabled(enable);
+  var parent = this.getParent();
+  var enable = !parent.getCombinationalSymbols().isFull() || this.isActive();
+  this.setEnabled(enable);
 };
 
 
 /** @override */
 sia.ui.SymbolKey.prototype.handleActivated = function(e) {
-	var parent = this.getParent();
+  var parent = this.getParent();
 
-	if (parent) {
-		var symbol = this.getSymbol();
-		parent.clearTimeout();
-		parent.appendSymbol(symbol);
-	}
+  if (parent) {
+    var symbol = this.getSymbol();
+    parent.clearTimeout();
+    parent.appendSymbol(symbol);
+  }
 };
 
 
 /** @override */
 sia.ui.SymbolKey.prototype.handleDeactivated = function(e) {
-	var parent = this.getParent();
+  var parent = this.getParent();
 
-	if (parent) {
-		if (parent.getActiveSymbolKeyCount() <= 0) {
-			parent.clearTimeout();
-			parent.pushAppendedSymbols();
-		}
-		else {
-			parent.setTimeout();
-		}
-	}
+  if (parent) {
+    if (parent.getActiveSymbolKeyCount() <= 0) {
+      parent.clearTimeout();
+      if (parent.getCombinationalSymbols().getAppendedCount() > 0) {
+        parent.pushAppendedSymbols();
+      }
+    }
+    else {
+      parent.setTimeout();
+    }
+  }
 };

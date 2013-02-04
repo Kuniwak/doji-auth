@@ -25,10 +25,10 @@ goog.require('goog.events.KeyHandler');
  * @extends {goog.events.EventTarget}
  */
 sia.events.KeyEdgeTriggerHandler = function(opt_element, opt_capture) {
-	goog.base(this);
+  goog.base(this);
 
-	this.keyHandler_ = new goog.events.KeyHandler(opt_element, opt_capture);
-	this.handler_ = new goog.events.EventHandler(this);
+  this.keyHandler_ = new goog.events.KeyHandler(opt_element, opt_capture);
+  this.handler_ = new goog.events.EventHandler(this);
 };
 goog.inherits(sia.events.KeyEdgeTriggerHandler, goog.events.EventTarget);
 
@@ -38,20 +38,20 @@ goog.inherits(sia.events.KeyEdgeTriggerHandler, goog.events.EventTarget);
  */
 sia.events.KeyEdgeTriggerHandler.EventType = {
   /**
-	 * Dispatched after a key falling edge (like keydown but do not repeat)
-	 * occured.
-	 */
-	FALLING_EDGE: 'keyfallingedge',
+   * Dispatched after a key falling edge (like keydown but do not repeat)
+   * occured.
+   */
+  FALLING_EDGE: 'keyfallingedge',
   /** Dispatched after key rising edge (like keyup) occured. */
-	RISING_EDGE: 'keyrisingedge'
+  RISING_EDGE: 'keyrisingedge'
 };
 
 
 /** @override */
 sia.events.KeyEdgeTriggerHandler.prototype.disposeInternal = function() {
-	goog.base(this, 'disposeInternal');
-	this.keyHandler_.dispose();
-	this.handler_.dispose();
+  goog.base(this, 'disposeInternal');
+  this.keyHandler_.dispose();
+  this.handler_.dispose();
 };
 
 
@@ -62,13 +62,13 @@ sia.events.KeyEdgeTriggerHandler.prototype.disposeInternal = function() {
  *     capture phase (defaults to false).
  */
 sia.events.KeyEdgeTriggerHandler.prototype.attach = function(element,
-		opt_capture) {
-	this.keyHandler_.attach(element, opt_capture);
-	this.handler_.
-		listen(element, goog.events.EventType.KEYUP, this.handleKeyup_,
-				opt_capture).
-		listen(this.keyHandler_, goog.events.KeyHandler.EventType.KEY,
-				this.handleKey_, opt_capture);
+    opt_capture) {
+  this.keyHandler_.attach(element, opt_capture);
+  this.handler_.
+    listen(element, goog.events.EventType.KEYUP, this.handleKeyup_,
+        opt_capture).
+    listen(this.keyHandler_, goog.events.KeyHandler.EventType.KEY,
+        this.handleKey_, opt_capture);
 };
 
 
@@ -76,7 +76,7 @@ sia.events.KeyEdgeTriggerHandler.prototype.attach = function(element,
  * Removes the listeners that may exist.
  */
 sia.events.KeyEdgeTriggerHandler.prototype.detach = function() {
-	this.handler_.removeAll();
+  this.handler_.removeAll();
 };
 
 
@@ -86,7 +86,7 @@ sia.events.KeyEdgeTriggerHandler.prototype.detach = function() {
  *     keyboard events.
  */
 sia.events.KeyEdgeTriggerHandler.prototype.getElement = function() {
-	return this.keyHandler_.getElement();
+  return this.keyHandler_.getElement();
 };
 
 
@@ -96,10 +96,10 @@ sia.events.KeyEdgeTriggerHandler.prototype.getElement = function() {
  * @private
  */
 sia.events.KeyEdgeTriggerHandler.prototype.handleKeyup_ = function(e) {
-	var keyEvent = new goog.events.KeyEvent(e.keyCode, e.charCode, false,
-			e.getBrowserEvent());
-		keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE;
-		this.dispatchEvent(keyEvent);
+  var keyEvent = new goog.events.KeyEvent(e.keyCode, e.charCode, false,
+      e.getBrowserEvent());
+    keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE;
+    this.dispatchEvent(keyEvent);
 };
 
 
@@ -109,10 +109,10 @@ sia.events.KeyEdgeTriggerHandler.prototype.handleKeyup_ = function(e) {
  * @private
  */
 sia.events.KeyEdgeTriggerHandler.prototype.handleKey_ = function(e) {
-	if (!e.repeat) {
-		var keyEvent = new goog.events.KeyEvent(e.keyCode, e.charCode, false,
-				e.getBrowserEvent());
-		keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE;
-		this.dispatchEvent(keyEvent);
-	}
+  if (!e.repeat) {
+    var keyEvent = new goog.events.KeyEvent(e.keyCode, e.charCode, false,
+        e.getBrowserEvent());
+    keyEvent.type = sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE;
+    this.dispatchEvent(keyEvent);
+  }
 };

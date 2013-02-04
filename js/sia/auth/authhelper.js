@@ -11,17 +11,18 @@ goog.provide('sia.auth.AuthenticationHelper');
 goog.require('goog.asserts');
 
 
+
 /**
  * A class for authentication helper.
  *
  * @constructor
- * @param {*} opt_correct Autheticator is an any object has {@code a.equals(b)}
+ * @param {*=} opt_correct Autheticator is an any object has {@code a.equals(b)}
  *   method.
  */
 sia.auth.AuthenticationHelper = function(opt_correct) {
-	if (opt_correct) {
-		this.setCorrect(opt_correct);
-	}
+  if (opt_correct) {
+    this.setCorrect(opt_correct);
+  }
 };
 
 
@@ -31,7 +32,7 @@ sia.auth.AuthenticationHelper = function(opt_correct) {
  *   method.
  */
 sia.auth.AuthenticationHelper.prototype.setCorrect = function(correct) {
-	this.correct_ = correct;
+  this.correct_ = correct;
 };
 
 
@@ -39,8 +40,8 @@ sia.auth.AuthenticationHelper.prototype.setCorrect = function(correct) {
  * Returns an indentification.
  * @return {*} Autheticator is an any object has {@code a.equals(b)} method.
  */
-sia.auth.AuthenticationHelper.prototype.getCorrect = function(correct) {
-	return this.correct_;
+sia.auth.AuthenticationHelper.prototype.getCorrect = function() {
+  return this.correct_;
 };
 
 
@@ -50,6 +51,6 @@ sia.auth.AuthenticationHelper.prototype.getCorrect = function(correct) {
  * @return {boolean} Whether authenticator was matched.
  */
 sia.auth.AuthenticationHelper.prototype.authenticate = function(auth) {
-	goog.asserts.assert(this.correct_ && this.correct_.equals);
-	return this.correct_.equals(auth);
+  goog.asserts.assert(this.correct_ && this.correct_.equals);
+  return this.correct_.equals(auth);
 };

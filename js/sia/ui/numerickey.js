@@ -31,11 +31,11 @@ goog.require('sia.ui.SymbolKey');
  *   interaction.
  */
 sia.ui.NumericalKey = function(number, opt_renderer, opt_domHelper) {
-	goog.base(this, number, opt_renderer || new sia.ui.NumericalKeyRenderer(),
-			opt_domHelper);
+  goog.base(this, number, opt_renderer || new sia.ui.NumericalKeyRenderer(),
+      opt_domHelper);
 
-	this.keyCode_ = goog.string.parseInt(this.getSymbol()) +
-		goog.events.KeyCodes.ZERO;
+  this.keyCode_ = goog.string.parseInt(this.getSymbol()) +
+    goog.events.KeyCodes.ZERO;
 };
 goog.inherits(sia.ui.NumericalKey, sia.ui.SymbolKey);
 
@@ -47,12 +47,12 @@ goog.inherits(sia.ui.NumericalKey, sia.ui.SymbolKey);
  */
 sia.ui.NumericalKey.CSS_CLASS = goog.getCssName('sia-numerical-key');
 goog.ui.registry.setDecoratorByClassName(sia.ui.NumericalKey.CSS_CLASS,
-		sia.ui.NumericalKey);
+    sia.ui.NumericalKey);
 
 
 /** @override */
 sia.ui.NumericalKey.prototype.getKeyCode = function() {
-	return this.keyCode_;
+  return this.keyCode_;
 };
 
 
@@ -64,14 +64,14 @@ sia.ui.NumericalKey.prototype.getKeyCode = function() {
  * @extends {goog.ui.ButtonRenderer}
  */
 sia.ui.NumericalKeyRenderer = function() {
-	goog.base(this);
+  goog.base(this);
 };
 goog.inherits(sia.ui.NumericalKeyRenderer, goog.ui.ButtonRenderer);
 goog.ui.registry.setDefaultRenderer(sia.ui.NumericalKey,
-		sia.ui.NumericalKeyRenderer);
+    sia.ui.NumericalKeyRenderer);
 
 
 /** @override */
 sia.ui.NumericalKeyRenderer.prototype.getCssClass = function() {
-	return sia.ui.NumericalKey.CSS_CLASS;
+  return sia.ui.NumericalKey.CSS_CLASS;
 };
