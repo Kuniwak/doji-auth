@@ -166,6 +166,7 @@ sia.ui.Key.prototype.updateDisplayArea = function() {
  * Handles key {@link sia.events.KeyEdgeTriggerHandler.EventType.FALLING_EDGE}.
  * Set this key active, if an event target is this key.
  * @param {goog.events.KeyEvent} e Key event to handle.
+ * @protected
  */
 sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
   if (e.keyCode === this.getKeyCode()) {
@@ -181,6 +182,7 @@ sia.ui.Key.prototype.handleKeyFallingEgde = function(e) {
  * Handles key {@link sia.events.KeyEdgeTriggerHandler.EventType.RISING_EDGE}.
  * Set this key active, if an event target is this key.
  * @param {goog.events.KeyEvent} e Key event to handle.
+ * @protected
  */
 sia.ui.Key.prototype.handleKeyRisingEgde = function(e) {
   if (e.keyCode === this.getKeyCode()) {
