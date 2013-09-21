@@ -76,11 +76,3 @@ OK ボタンを押す。
 * [JsDoc Toolkitを使う！](http://www12.atwiki.jp/aias-jsdoctoolkit/)
 * [Annotating JavaScript for the Closure Compiler](https://developers.google.com/closure/compiler/docs/js-for-compiler)
 * [同時押し認証: 暗証番号認証の改善を目指した一つの試み](http://www.dicomo.org/2012/program/1F_abst.html#1F-4)
-
-連絡先
-------
-電気通信大学大学院 情報システム学研究科 社会知能情報学専攻
-
-田中研究室 修士課程
-
-[国分 佑樹（Yuki Kokubun）](mailto:kokubun@tanaka.is.uec.ac.jp)
