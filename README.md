@@ -1,86 +1,86 @@
-“¯‰Ÿ‚µˆÃØ”Ô†”FØ (Simultaneous Inputable Authentication) ver.3
+åŒæ™‚æŠ¼ã—æš—è¨¼ç•ªå·èªè¨¼ (Simultaneous Inputable Authentication) ver.3
 ==================================================================
 
-ƒfƒ‚—p‚É‰ü—Ç‚µ‚½“¯‰Ÿ‚µ”FØ‚Å‚·B
+ãƒ‡ãƒ¢ç”¨ã«æ”¹è‰¯ã—ãŸåŒæ™‚æŠ¼ã—èªè¨¼ã§ã™ã€‚
 
-ƒtƒ@ƒCƒ‹\¬
+ãƒ•ã‚¡ã‚¤ãƒ«æ§‹æˆ
 ------------
-* index.html ”FØ‰æ–Ê
-* test_all.html ƒ†ƒjƒbƒgƒeƒXƒgƒtƒ@ƒCƒ‹
-* js/ JavaScript ƒtƒ@ƒCƒ‹ƒfƒBƒŒƒNƒgƒŠ
- * sia.min.js ˆ³kÏ‚İƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹
- * deps.js ˆË‘¶’è‹`ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹
- * sia/ ”FØƒ‚ƒWƒ…[ƒ‹ƒfƒBƒŒƒNƒgƒŠ
-* css/ CSS ƒtƒ@ƒCƒ‹ƒfƒBƒŒƒNƒgƒŠ
-* doc/ ƒhƒLƒ…ƒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ
- * index.html ƒhƒLƒ…ƒƒ“ƒgƒtƒ@ƒCƒ‹i‰pŒêj
-* img/ ‰æ‘œƒfƒBƒŒƒNƒgƒŠ
+* index.html èªè¨¼ç”»é¢
+* test_all.html ãƒ¦ãƒ‹ãƒƒãƒˆãƒ†ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«
+* js/ JavaScript ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+ * sia.min.js åœ§ç¸®æ¸ˆã¿ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«
+ * deps.js ä¾å­˜å®šç¾©ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«
+ * sia/ èªè¨¼ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+* css/ CSS ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+* doc/ ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+ * index.html ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆè‹±èªï¼‰
+* img/ ç”»åƒãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 
-* update_css.rb CSS‚ğƒRƒ“ƒpƒCƒ‹‚·‚éiClosure Stylesheets ‚ÌƒpƒX‚Í“K‹X•ÏX‚µ‚Ä‚­‚¾‚³‚¢j
-* update_dep.rb ˆË‘¶ŠÖŒW’è‹`‚ğXV‚·‚éiClosure Library ‚ÌƒpƒX‚Í“K‹X•ÏX‚µ‚Ä‚­‚¾‚³‚¢j
-* compile_ADVANCED.rb ƒXƒNƒŠƒvƒg‚ğƒRƒ“ƒpƒCƒ‹‚·‚éiClosure Compiler ‚ÌƒpƒX‚Í“K‹X•ÏX‚µ‚Ä‚­‚¾‚³‚¢j
-* .git/ ƒo[ƒWƒ‡ƒ“ŠÇ——pƒfƒBƒŒƒNƒgƒŠ
-* .gitignore ƒo[ƒWƒ‡ƒ“ŠÇ——pƒtƒ@ƒCƒ‹
+* update_css.rb CSSã‚’ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚‹ï¼ˆClosure Stylesheets ã®ãƒ‘ã‚¹ã¯é©å®œå¤‰æ›´ã—ã¦ãã ã•ã„ï¼‰
+* update_dep.rb ä¾å­˜é–¢ä¿‚å®šç¾©ã‚’æ›´æ–°ã™ã‚‹ï¼ˆClosure Library ã®ãƒ‘ã‚¹ã¯é©å®œå¤‰æ›´ã—ã¦ãã ã•ã„ï¼‰
+* compile_ADVANCED.rb ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚‹ï¼ˆClosure Compiler ã®ãƒ‘ã‚¹ã¯é©å®œå¤‰æ›´ã—ã¦ãã ã•ã„ï¼‰
+* .git/ ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç®¡ç†ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+* .gitignore ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç®¡ç†ç”¨ãƒ•ã‚¡ã‚¤ãƒ«
 
-‘€ì•û–@
+æ“ä½œæ–¹æ³•
 --------
 
-### İ’è‘O‰æ–ÊiŒ®ƒ}[ƒNj
-Set an authenticate i‰‰ñ‚Í Tryjƒ{ƒ^ƒ“‚ğ‰Ÿ‚·B
+### è¨­å®šå‰ç”»é¢ï¼ˆéµãƒãƒ¼ã‚¯ï¼‰
+Set an authenticate ï¼ˆåˆå›ã¯ Tryï¼‰ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã€‚
 
-### ”é–§î•ñİ’èi“ü—Í‰æ–Êj
-İ’è‚·‚é”é–§î•ñ‚ğ“ü—Í‚·‚éB
+### ç§˜å¯†æƒ…å ±è¨­å®šï¼ˆå…¥åŠ›ç”»é¢ï¼‰
+è¨­å®šã™ã‚‹ç§˜å¯†æƒ…å ±ã‚’å…¥åŠ›ã™ã‚‹ã€‚
 
-### ”é–§î•ñŠm”Fi“ì‹ùƒ}[ƒNj
-“ü—Í‚µ‚½”é–§î•ñ‚ğŠm”F‚·‚éB
-Authenticate ƒ{ƒ^ƒ“‚ğ‰Ÿ‚·B
+### ç§˜å¯†æƒ…å ±ç¢ºèªï¼ˆå—äº¬éŒ ãƒãƒ¼ã‚¯ï¼‰
+å…¥åŠ›ã—ãŸç§˜å¯†æƒ…å ±ã‚’ç¢ºèªã™ã‚‹ã€‚
+Authenticate ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã€‚
 
-### ”FØi“ü—Í‰æ–Êj
-”FØ‚É‚©‚¯‚é”é–§î•ñ‚ğ“ü—Í‚·‚éB
+### èªè¨¼ï¼ˆå…¥åŠ›ç”»é¢ï¼‰
+èªè¨¼ã«ã‹ã‘ã‚‹ç§˜å¯†æƒ…å ±ã‚’å…¥åŠ›ã™ã‚‹ã€‚
 
-### Œ‹‰ÊŠm”FiÂF¬Œ÷AÔF¸”sj
-Œ‹‰Ê‚ğŠm”F‚·‚éB
-OK ƒ{ƒ^ƒ“‚ğ‰Ÿ‚·B
+### çµæœç¢ºèªï¼ˆé’ï¼šæˆåŠŸã€èµ¤ï¼šå¤±æ•—ï¼‰
+çµæœã‚’ç¢ºèªã™ã‚‹ã€‚
+OK ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã€‚
 
 
-•ÏX“_
+å¤‰æ›´ç‚¹
 ------
-* ÀŒ±—p“®ì‚©‚çƒfƒ‚“®ì‚É•ÏX
- * ”é–§î•ñİ’èƒ‚[ƒh‚Æ”FØƒ‚[ƒh‚Ì2‚Â‚ğŒJ‚è•Ô‚·‚æ‚¤‚É•ÏX
-* UX‚ğ‰ü‘P
- * ƒoƒbƒNƒXƒy[ƒXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«A“¯‚É”šE’ŠÛƒVƒ“ƒ{ƒ‹ƒ{ƒ^ƒ“iS, M, Lj‚ğ‰Ÿ‚¹‚È‚¢‚æ‚¤‚É•ÏX
- * ”šE’ŠÛƒVƒ“ƒ{ƒ‹ƒ{ƒ^ƒ“iS, M, Lj‚ª‰Ÿ‚³‚ê‚½‚Æ‚«A“¯‚ÉƒoƒbƒNƒXƒy[ƒXƒ{ƒ^ƒ“‚ğ‰Ÿ‚¹‚È‚¢‚æ‚¤‚É•ÏX
-* LOG ‚Ì Web‚ğ‰î‚µ‚½‘—M‹@”\‚Ì‘ã‚í‚è‚Æ‚µ‚ÄASafari 6 ‚Ì Web ƒCƒ“ƒXƒyƒNƒ^‚ğ‚Â‚©‚¤g—p‚É•ÏXiMac OSX 10.7ˆÈ~‚ª•K—vj
- * ‘O‚Ì‚Í’ÊMáŠQ‚É‚æ‚Á‚ÄƒƒO‚ªŒ‡‘¹‚·‚é‚±‚Æ‚ª‚ ‚Á‚½iLogServerALocalStorageAMail‚Æ‚¢‚¤ 3 d‚Ìç’·«‚ğ‚½‚µ‚Ä‚¢‚½‚Ì‚ÉIj
-* ƒNƒ‰ƒX\‘¢‚ğŒ©’¼‚·‚½‚ß‚Éƒtƒ‹ƒXƒNƒ‰ƒbƒ`
- * “®ì‘¬“x‰ü‘P•À‘•‚ÌŒø—¦‰»‚Ì‚½‚ß‚É [jQuery](http://jquery.com/) ¨ [Closure Library](https://developers.google.com/closure/library/) ‚Ö‚Æ•ÏX
- * ƒRƒ“ƒpƒCƒ‰‚ğ [JSMIN](http://www.crockford.com/javascript/jsmin.html) ¨ [Closure Compiler](https://developers.google.com/closure/compiler/?hl=ja) ‚Ö‚Æ•ÏX
- * CSS ƒRƒ“ƒpƒCƒ‰‚É [Closure Stylesheets](http://code.google.com/p/closure-stylesheets/) ‚ğg—p
-* •seØ‚¾‚Á‚½ƒƒO‚ğŒ©‚â‚·‚­‰ü—Ç
-* •seØ‚¾‚Á‚½d—l‘‚ğŒ©‚â‚·‚­‰ü—Ç
+* å®Ÿé¨“ç”¨å‹•ä½œã‹ã‚‰ãƒ‡ãƒ¢å‹•ä½œã«å¤‰æ›´
+ * ç§˜å¯†æƒ…å ±è¨­å®šãƒ¢ãƒ¼ãƒ‰ã¨èªè¨¼ãƒ¢ãƒ¼ãƒ‰ã®2ã¤ã‚’ç¹°ã‚Šè¿”ã™ã‚ˆã†ã«å¤‰æ›´
+* UXã‚’æ”¹å–„
+ * ãƒãƒƒã‚¯ã‚¹ãƒšãƒ¼ã‚¹ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã€åŒæ™‚ã«æ•°å­—ãƒ»æŠ½è±¡ã‚·ãƒ³ãƒœãƒ«ãƒœã‚¿ãƒ³ï¼ˆS, M, Lï¼‰ã‚’æŠ¼ã›ãªã„ã‚ˆã†ã«å¤‰æ›´
+ * æ•°å­—ãƒ»æŠ½è±¡ã‚·ãƒ³ãƒœãƒ«ãƒœã‚¿ãƒ³ï¼ˆS, M, Lï¼‰ãŒæŠ¼ã•ã‚ŒãŸã¨ãã€åŒæ™‚ã«ãƒãƒƒã‚¯ã‚¹ãƒšãƒ¼ã‚¹ãƒœã‚¿ãƒ³ã‚’æŠ¼ã›ãªã„ã‚ˆã†ã«å¤‰æ›´
+* LOG ã® Webã‚’ä»‹ã—ãŸé€ä¿¡æ©Ÿèƒ½ã®ä»£ã‚ã‚Šã¨ã—ã¦ã€Safari 6 ã® Web ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ã‚’ã¤ã‹ã†ä½¿ç”¨ã«å¤‰æ›´ï¼ˆMac OSX 10.7ä»¥é™ãŒå¿…è¦ï¼‰
+ * å‰ã®ã¯é€šä¿¡éšœå®³ã«ã‚ˆã£ã¦ãƒ­ã‚°ãŒæ¬ æã™ã‚‹ã“ã¨ãŒã‚ã£ãŸï¼ˆLogServerã€LocalStorageã€Mailã¨ã„ã† 3 é‡ã®å†—é•·æ€§ã‚’æŒãŸã—ã¦ã„ãŸã®ã«ï¼ï¼‰
+* ã‚¯ãƒ©ã‚¹æ§‹é€ ã‚’è¦‹ç›´ã™ãŸã‚ã«ãƒ•ãƒ«ã‚¹ã‚¯ãƒ©ãƒƒãƒ
+ * å‹•ä½œé€Ÿåº¦æ”¹å–„ï¼†å®Ÿè£…ã®åŠ¹ç‡åŒ–ã®ãŸã‚ã« [jQuery](http://jquery.com/) â†’ [Closure Library](https://developers.google.com/closure/library/) ã¸ã¨å¤‰æ›´
+ * ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã‚’ [JSMIN](http://www.crockford.com/javascript/jsmin.html) â†’ [Closure Compiler](https://developers.google.com/closure/compiler/?hl=ja) ã¸ã¨å¤‰æ›´
+ * CSS ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã« [Closure Stylesheets](http://code.google.com/p/closure-stylesheets/) ã‚’ä½¿ç”¨
+* ä¸è¦ªåˆ‡ã ã£ãŸãƒ­ã‚°ã‚’è¦‹ã‚„ã™ãæ”¹è‰¯
+* ä¸è¦ªåˆ‡ã ã£ãŸä»•æ§˜æ›¸ã‚’è¦‹ã‚„ã™ãæ”¹è‰¯
 
 
-Ql
+å‚è€ƒ
 ----
 * [Closure Library API Document](http://closure-library.googlecode.com/svn/docs/index.html)
-* [Google API Expert‚ª‰ğà‚·‚é Closure LibraryƒvƒƒOƒ‰ƒ~ƒ“ƒOƒKƒCƒh](http://www.amazon.co.jp/Google-API-Expert%E3%81%8C%E8%A7%A3%E8%AA%AC%E3%81%99%E3%82%8B-Closure-Library%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%82%AC%E3%82%A4%E3%83%89/dp/4844329626)
-* [Closure Library “ú–{Œê Jsdoc](https://github.com/OrgaChem/google-closure-library)
-* [Closure Library ‚Å HTML ‚©‚ç UI ‚ğ¶¬‚·‚é](http://webos-goodies.jp/archives/building_ui_from_html_using_closure_library.html)
+* [Google API ExpertãŒè§£èª¬ã™ã‚‹ Closure Libraryãƒ—ãƒ­ã‚°ãƒ©ãƒŸãƒ³ã‚°ã‚¬ã‚¤ãƒ‰](http://www.amazon.co.jp/Google-API-Expert%E3%81%8C%E8%A7%A3%E8%AA%AC%E3%81%99%E3%82%8B-Closure-Library%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%82%AC%E3%82%A4%E3%83%89/dp/4844329626)
+* [Closure Library æ—¥æœ¬èª Jsdoc](https://github.com/OrgaChem/google-closure-library)
+* [Closure Library ã§ HTML ã‹ã‚‰ UI ã‚’ç”Ÿæˆã™ã‚‹](http://webos-goodies.jp/archives/building_ui_from_html_using_closure_library.html)
 * [The Closure UI Framework: An Introduction to Components](http://code.google.com/p/closure-library/wiki/IntroToComponents)
 * [The Closure UI Framework: An Introduction to Controls](http://code.google.com/p/closure-library/wiki/IntroToControls)
-* [Closure Compiler‚ğg‚¤I](http://www37.atwiki.jp/aias-closurecompiler/)
-* [Closure Stylesheets ‚Å CSS ‚ğÅ“K‰»‚·‚é (1)](http://webos-goodies.jp/archives/how_to_use_closure_stylesheets_part_1.html)
-* [iOS6‚ÌƒŠƒ‚[ƒgWebƒCƒ“ƒXƒyƒNƒ^ - to-R](http://blog.webcreativepark.net/2012/09/21-110644.html)
-* [ƒ^ƒbƒ`ƒfƒoƒCƒX‚ğw‚Å‰õ“K‚É‘€ì‚³‚¹‚é‚½‚ß‚É (1/2)](http://www.atmarkit.co.jp/ait/articles/1210/24/news023.html)
+* [Closure Compilerã‚’ä½¿ã†ï¼](http://www37.atwiki.jp/aias-closurecompiler/)
+* [Closure Stylesheets ã§ CSS ã‚’æœ€é©åŒ–ã™ã‚‹ (1)](http://webos-goodies.jp/archives/how_to_use_closure_stylesheets_part_1.html)
+* [iOS6ã®ãƒªãƒ¢ãƒ¼ãƒˆWebã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ - to-R](http://blog.webcreativepark.net/2012/09/21-110644.html)
+* [ã‚¿ãƒƒãƒãƒ‡ãƒã‚¤ã‚¹ã‚’æŒ‡ã§å¿«é©ã«æ“ä½œã•ã›ã‚‹ãŸã‚ã« (1/2)](http://www.atmarkit.co.jp/ait/articles/1210/24/news023.html)
 * [jsdoc-toolkit](http://code.google.com/p/jsdoc-toolkit/)
-* [JsDoc Toolkit‚ğg‚¤I](http://www12.atwiki.jp/aias-jsdoctoolkit/)
+* [JsDoc Toolkitã‚’ä½¿ã†ï¼](http://www12.atwiki.jp/aias-jsdoctoolkit/)
 * [Annotating JavaScript for the Closure Compiler](https://developers.google.com/closure/compiler/docs/js-for-compiler)
-* [“¯‰Ÿ‚µ”FØ: ˆÃØ”Ô†”FØ‚Ì‰ü‘P‚ğ–Úw‚µ‚½ˆê‚Â‚Ì‚İ](http://www.dicomo.org/2012/program/1F_abst.html#1F-4)
+* [åŒæ™‚æŠ¼ã—èªè¨¼: æš—è¨¼ç•ªå·èªè¨¼ã®æ”¹å–„ã‚’ç›®æŒ‡ã—ãŸä¸€ã¤ã®è©¦ã¿](http://www.dicomo.org/2012/program/1F_abst.html#1F-4)
 
-˜A—æ
+é€£çµ¡å…ˆ
 ------
-“d‹C’ÊM‘åŠw‘åŠw‰@ î•ñƒVƒXƒeƒ€ŠwŒ¤‹†‰È Ğ‰ï’m”\î•ñŠwêU
+é›»æ°—é€šä¿¡å¤§å­¦å¤§å­¦é™¢ æƒ…å ±ã‚·ã‚¹ãƒ†ãƒ å­¦ç ”ç©¶ç§‘ ç¤¾ä¼šçŸ¥èƒ½æƒ…å ±å­¦å°‚æ”»
 
-“c’†Œ¤‹†º Cm‰Û’ö
+ç”°ä¸­ç ”ç©¶å®¤ ä¿®å£«èª²ç¨‹
 
-[‘•ª —C÷iYuki Kokubunj](mailto:kokubun@tanaka.is.uec.ac.jp)
+[å›½åˆ† ä½‘æ¨¹ï¼ˆYuki Kokubunï¼‰](mailto:kokubun@tanaka.is.uec.ac.jp)
