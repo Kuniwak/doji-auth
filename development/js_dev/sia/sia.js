@@ -7,7 +7,6 @@
  * @author orga.chem.job@gmail.com (OrgaChem)
  */
 
-goog.provide('sia');
 goog.provide('sia.App');
 
 goog.require('goog.asserts');
@@ -311,10 +310,3 @@ sia.App.prototype.handleKeypadEvents = function(e) {
 sia.App.prototype.handleStart = function(e) {
   this.getCurrentMode().next();
 };
-
-
-/**
- * The application instance.
- * @type {sia.App}
- */
-sia.app = new sia.App();
