@@ -176,10 +176,6 @@ div.sia-keys-row {
 div.sia-keys-row > div:first-child {
 	border-left: none;
 }
-
-div.sia-keys-row-2x {
-	-webkit-box-flex: 3.0;
-}
 /*}}}*/
 
 /*{{{ Progress bar style */
