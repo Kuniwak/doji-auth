@@ -1,4 +1,8 @@
 .DS_Store
+node_modules/
+npm.log
+deps.js
+secret.js
+development/closure/
 debug/
 production/
-deps.js
