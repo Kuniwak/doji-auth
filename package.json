@@ -1,0 +1,27 @@
+{
+  "name": "doji-auth",
+  "version": "0.0.0",
+  "description": "Extended PIN Authentication Scheme by Allowing Multi-Touch Input.",
+  "main": "server.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OrgaChem/doji-auth"
+  },
+  "author": "OrgaChem",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OrgaChem/doji-auth/issues"
+  },
+  "dependencies": {
+    "express": "~3.4.8",
+    "passport": "~0.2.0",
+    "passport-local": "~0.1.6"
+  }
+}

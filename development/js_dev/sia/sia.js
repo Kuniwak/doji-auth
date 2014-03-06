@@ -34,6 +34,12 @@ goog.require('sia.ui.ControlPanel.EventType');
 goog.require('sia.ui.Keypad.EventType');
 
 
+/**
+ * @define {boolean} Whether log fearures are enabled.
+ */
+sia.debug.LOG_ENABLED = true;
+
+
 
 /**
  * A class for SIA Application.
